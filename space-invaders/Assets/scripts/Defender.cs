@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Defender : MonoBehaviour {
-
+	
 	public Vector2 speed;
 	private Vector2 movement;
 
@@ -13,7 +13,6 @@ public class Defender : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		// Debug.Log (movement);
 		rigidbody2D.velocity = movement;
 	}
 }
