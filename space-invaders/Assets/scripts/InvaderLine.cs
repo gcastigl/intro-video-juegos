@@ -15,8 +15,8 @@ public class InvaderLine : MonoBehaviour {
 		float halfTotalWidth = invadersCount * invaderSeparation / 2;
 		for (int i = 0; i <= invadersCount; i++) {
 			float x = i * invaderSeparation - halfTotalWidth;
-			Vector3 postition = new Vector3(x, 0, 0);
-			GameObject enemy = Object.Instantiate(invaderPrefab, postition, Quaternion.identity) as GameObject;
+			Vector3 position = new Vector3(x, 0, transform.position.z);
+			GameObject enemy = Object.Instantiate(invaderPrefab, position, Quaternion.identity) as GameObject;
 			enemy.transform.parent = transform;
 		}
 		velocity = new Vector2(xSpeed, 0);
@@ -37,6 +37,6 @@ public class InvaderLine : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		rigidbody2D.velocity = velocity;
+		rigidbody.velocity = velocity;
 	}
 }

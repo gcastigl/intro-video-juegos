@@ -13,6 +13,7 @@ public class Defender : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		rigidbody2D.velocity = movement;
+		rigidbody.velocity = movement;
 	}
+	
 }
