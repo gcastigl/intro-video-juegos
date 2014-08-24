@@ -11,7 +11,7 @@ public class Invader : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (permissionToShoot && Random.value < 0.05f) {
+		if (permissionToShoot && Random.value < 0.01f) {
 			gun.shoot(new Vector3(0, -1, 0));
 			permissionToShoot = false;
 		}
