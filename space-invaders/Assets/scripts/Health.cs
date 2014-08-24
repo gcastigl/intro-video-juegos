@@ -3,10 +3,9 @@ using System.Collections;
 
 public class Health : MonoBehaviour {
 	
-	private int hp;
+	public int hp;
 
 	void Start () {
-		hp = 1;
 	}
 	
 	void Update () {
