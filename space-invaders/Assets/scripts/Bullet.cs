@@ -21,6 +21,7 @@ public class Bullet : MonoBehaviour {
 			if (health != null) {
 				health.damage(1);
 			}
+			shooter.audio.Play();
 			Destroy(gameObject);
 		}
 	}
