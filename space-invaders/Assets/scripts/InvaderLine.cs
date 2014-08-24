@@ -13,10 +13,11 @@ public class InvaderLine : MonoBehaviour {
 
 	void Start() {
 		float halfTotalWidth = invadersCount * invaderSeparation / 2;
-		for (int i = 0; i <= invadersCount; i++) {
+		for (int i = 0; i < invadersCount; i++) {
 			float x = i * invaderSeparation - halfTotalWidth;
-			Vector3 position = new Vector3(x, 0, transform.position.z);
-			GameObject enemy = Object.Instantiate(invaderPrefab, position, Quaternion.identity) as GameObject;
+			Vector3 position = new Vector3(x, transform.position.y, transform.position.z);
+			Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+			GameObject enemy = Object.Instantiate(invaderPrefab, position, rotation) as GameObject;
 			enemy.transform.parent = transform;
 		}
 		velocity = new Vector2(xSpeed, 0);

@@ -3,17 +3,16 @@ using System.Collections;
 
 public class Invader : MonoBehaviour {
 
-	// Use this for initialization
+	private Gun gun;
+
 	void Start() {
-	
+		gun = gameObject.GetComponentInChildren<Gun>();
 	}
 	
-	// Update is called once per frame
 	void Update() {
-	
+		if (gun.isReady() && Random.value < 0.005f) {
+			gun.shoot(new Vector3(0, -1, 0));
+		}
 	}
 
-	public void hit() {
-		Destroy(gameObject);
-	}
 }

@@ -6,6 +6,7 @@ public class Gun : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public float delay;
 	public float bulletSpeed;
+	
 	private float delayUnitNextShoot = 0;
 
 	void Start() {
@@ -19,7 +20,7 @@ public class Gun : MonoBehaviour {
 	}
 
 	public void shoot(Vector3 direction) {
-		if (delayUnitNextShoot <= 0) {
+		if (isReady()) {
 			delayUnitNextShoot = delay;
 			createBullet(transform.position, direction);
 		}
@@ -30,6 +31,11 @@ public class Gun : MonoBehaviour {
 		Bullet bullet = bulletGO.GetComponent<Bullet>();
 		bullet.velocity = direction * bulletSpeed;
 		bullet.ttd = 2;
+		bullet.shooter = transform.parent.gameObject;
 	}
-	
+
+	public bool isReady() {
+		return delayUnitNextShoot <= 0;
+	}
+
 }
