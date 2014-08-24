@@ -11,8 +11,15 @@ public class InvaderManager : MonoBehaviour {
 
 	private Vector2 velocity;
 	private GameObject[][] invaders;
+	public TimeDelay shootingDelay;
 
 	void Start() {
+		initializeInvaders();
+		velocity = new Vector2(xSpeed, 0);
+		shootingDelay = GetComponent<TimeDelay>();
+	}
+
+	private void initializeInvaders() {
 		float halfWidth = invadersPerCol * xSeparation / 2;
 		float halfHeight = rowsCount * ySeparation / 2;
 		float startX = transform.position.x - halfWidth;
@@ -24,7 +31,6 @@ public class InvaderManager : MonoBehaviour {
 				invaders[row][col] = createInvader(startX, startY, row, col);
 			}
 		}
-		velocity = new Vector2(xSpeed, 0);
 	}
 
 	private GameObject createInvader(float startX, float startY, int row, int col) {
@@ -41,7 +47,12 @@ public class InvaderManager : MonoBehaviour {
 		if (escapedMinX() || escapedMaxX()) {
 			velocity = velocity * -1;
 		}
-		shootWithClosestInvaders();
+		if (shootingDelay.isReady()) {
+			bool hasInvadersLeft = shootWithClosestInvaders();
+			if (!hasInvadersLeft) {
+				Destroy(gameObject);
+			}
+		}
 	}
 
 	private bool escapedMaxX() {
@@ -52,7 +63,8 @@ public class InvaderManager : MonoBehaviour {
 		return transform.position.x > xLimits.y && velocity.x > 0;
 	}
 
-	private void shootWithClosestInvaders() {
+	private bool shootWithClosestInvaders() {
+		int aliveInvaders = 0;
 		for (int col = 0; col < invadersPerCol; col++) { 
 			bool permissionToShootGranted = false;
 			for (int row = 0; row < rowsCount && !permissionToShootGranted; row++) {
@@ -60,9 +72,11 @@ public class InvaderManager : MonoBehaviour {
 					Invader invader = invaders[row][col].GetComponent<Invader>();
 					invader.permissionToShoot = true;
 					permissionToShootGranted = true;
+					aliveInvaders++;
 				}
 			}
 		}
+		return aliveInvaders > 0;
 	}
 
 	void FixedUpdate () {
