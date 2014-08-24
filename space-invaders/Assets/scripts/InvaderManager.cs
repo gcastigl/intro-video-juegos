@@ -12,6 +12,9 @@ public class InvaderManager : MonoBehaviour {
 	private Vector2 velocity;
 	private GameObject[][] invaders;
 	public TimeDelay shootingDelay;
+	private bool goingDown;
+	private float lastVelX;
+	private float targetPosY = 0;
 
 	void Start() {
 		initializeInvaders();
@@ -45,7 +48,14 @@ public class InvaderManager : MonoBehaviour {
 
 	void Update() {
 		if (escapedMinX() || escapedMaxX()) {
-			velocity = velocity * -1;
+			lastVelX = velocity.x;
+			velocity = new Vector3(0, -1f);
+			targetPosY = transform.position.y - 0.3f;
+			goingDown = true;
+		}
+		if (transform.position.y < targetPosY && goingDown) {
+			goingDown = false;
+			velocity = new Vector2(-lastVelX, 0);
 		}
 		if (shootingDelay.isReady()) {
 			bool hasInvadersLeft = shootWithClosestInvaders();
@@ -80,6 +90,6 @@ public class InvaderManager : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		rigidbody.velocity = velocity;
+		rigidbody.velocity = velocity * 1.5f;
 	}
 }
