@@ -3,7 +3,8 @@ using System.Collections;
 
 public class InvaderManager : MonoBehaviour {
 
-	public GameObject invaderPrefab;
+	public GameObject invaderTopPrefab;
+	public GameObject invaderMidPrefab;
 	public int rowsCount, invadersPerCol;
 	public float xSeparation, ySeparation;
 	public float xSpeed;
@@ -40,8 +41,9 @@ public class InvaderManager : MonoBehaviour {
 		float x = startX + col * xSeparation;
 		float y = startY + row * ySeparation;
 		Vector3 position = new Vector3(x, y, transform.position.z);
-		Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, 180));
-		GameObject enemy = Object.Instantiate(invaderPrefab, position, rotation) as GameObject;
+		Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+		GameObject prefab = row <= 2 ? invaderMidPrefab : invaderTopPrefab;
+		GameObject enemy = Object.Instantiate(prefab, position, rotation) as GameObject;
 		enemy.transform.parent = transform;
 		return enemy;
 	}

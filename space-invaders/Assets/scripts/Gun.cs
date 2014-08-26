@@ -6,7 +6,8 @@ public class Gun : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public float delay;
 	public float bulletSpeed;
-	
+	public int hitAmount;
+
 	private float delayUnitNextShoot = 0;
 
 	void Start() {
@@ -31,6 +32,7 @@ public class Gun : MonoBehaviour {
 		Bullet bullet = bulletGO.GetComponent<Bullet>();
 		bullet.velocity = direction * bulletSpeed;
 		bullet.ttd = 2;
+		bullet.hitAmount = hitAmount;
 		bullet.shooter = transform.parent.gameObject;
 	}
 
