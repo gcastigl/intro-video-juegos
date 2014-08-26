@@ -18,6 +18,8 @@ public class Invader : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Destroy(other.gameObject);
+		if (other.gameObject.GetComponent<Bullet>() == null) {
+			Destroy(other.gameObject);
+		}
 	}
 }
