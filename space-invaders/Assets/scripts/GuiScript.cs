@@ -3,25 +3,38 @@ using System.Collections;
 
 public class GuiScript : MonoBehaviour {
 
+	public float xOffset;
+	public float yOffset;
 	public GameObject lifeLeftPrefav;
 	public GameObject gameManagerObject;
 
 	private GameManager gameManager;
-	private GameObject[] lifesLeftPrefav;
+	private GameObject[] lifesLeftPrefavs;
 
 	// Use this for initialization
 	void Start () {
 		gameManager = gameManagerObject.GetComponent<GameManager>();
-		lifesLeftPrefav = new GameObject[gameManager.lives];
+		lifesLeftPrefavs = new GameObject[gameManager.lives];
 		for (int i = 0; i < gameManager.lives; i++) {
-			Vector3 position = new Vector3(7 + 1.3f * i, 4.5f, 0);
+			Vector3 position = new Vector3(xOffset + i, yOffset, transform.position.z - 1);
 			GameObject lifeLeft = Object.Instantiate(lifeLeftPrefav, position, Quaternion.identity) as GameObject;
-			lifesLeftPrefav[i] = lifeLeft;
+			lifesLeftPrefavs[i] = lifeLeft;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		int livesDiffs = lifesLeftPrefavs.Length - gameManager.lives;
+		if (livesDiffs > 0) {
+			for (int i = 0; i < livesDiffs; i++) {
+				Destroy(lifesLeftPrefavs[i]);
+			}
+			GameObject[] updatedLifesLeft = new GameObject[gameManager.lives];
+			for (int j = 0; j < gameManager.lives; j++) {
+				updatedLifesLeft[j] = lifesLeftPrefavs[j + livesDiffs];
+			}
+			lifesLeftPrefavs = updatedLifesLeft;
+		}
 	}
 	
 }
