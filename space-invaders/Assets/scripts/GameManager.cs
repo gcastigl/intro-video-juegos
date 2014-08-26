@@ -8,7 +8,9 @@ public class GameManager : MonoBehaviour {
 	public int lives;
 	public GameObject invaders;
 	public Vector3 startLocation;
+	public GameObject gameOverLayer;
 
+	private bool gameEnded;
 	private GameObject defender = null;
 
 	void Start () {
@@ -16,17 +18,27 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Update () {
-		if (defender == null) {
-			if (lives > 0) {
-				lives--;
-				newDefender();
-				invaders.GetComponent<TimeDelay>().resetCounter();
-			} else {
-				Debug.Log("perdiste el juego!");
-				// Application.LoadLevel("pepe");
+		if (gameEnded) {
+			if (Input.GetKey(KeyCode.R)) {
+				Application.LoadLevel("mainmenu-scene");
 			}
-		} else if (invaders == null) {
-			Debug.Log("Ganaster el juego!");
+		} else {
+			if (defender == null) {
+				if (lives > 0) {
+					lives--;
+					newDefender();
+					invaders.GetComponent<TimeDelay>().resetCounter();
+				} else {
+					SpriteRenderer render = gameOverLayer.GetComponent<SpriteRenderer>();
+					if (!render.enabled) {
+						render.enabled = true;
+					}
+					gameEnded = true;
+				}
+			} else if (invaders == null) {
+				gameEnded = true;
+				Debug.Log("Ganaster el juego!");
+			}
 		}
 	}
 

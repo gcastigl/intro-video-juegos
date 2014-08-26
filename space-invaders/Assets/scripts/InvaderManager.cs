@@ -5,6 +5,7 @@ public class InvaderManager : MonoBehaviour {
 
 	public GameObject invaderTopPrefab;
 	public GameObject invaderMidPrefab;
+	public GameObject invaderBottomPrefab;
 	public int rowsCount, invadersPerCol;
 	public float xSeparation, ySeparation;
 	public float xSpeed;
@@ -43,7 +44,7 @@ public class InvaderManager : MonoBehaviour {
 		float y = startY + row * ySeparation;
 		Vector3 position = new Vector3(x, y, transform.position.z);
 		Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-		GameObject prefab = row <= 2 ? invaderMidPrefab : invaderTopPrefab;
+		GameObject prefab = row < 2 ? invaderBottomPrefab : (row < 4 ? invaderMidPrefab : invaderTopPrefab);
 		GameObject enemy = Object.Instantiate(prefab, position, rotation) as GameObject;
 		enemy.transform.parent = transform;
 		return enemy;
