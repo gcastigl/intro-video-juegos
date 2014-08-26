@@ -8,6 +8,7 @@ public class InvaderManager : MonoBehaviour {
 	public int rowsCount, invadersPerCol;
 	public float xSeparation, ySeparation;
 	public float xSpeed;
+	public float xSpeedIncrement;
 	public Vector2 xLimits;
 
 	private Vector2 velocity;
