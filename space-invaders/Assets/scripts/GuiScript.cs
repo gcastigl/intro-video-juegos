@@ -10,8 +10,7 @@ public class GuiScript : MonoBehaviour {
 
 	private GameManager gameManager;
 	private GameObject[] lifesLeftPrefavs;
-
-	// Use this for initialization
+	
 	void Start () {
 		gameManager = gameManagerObject.GetComponent<GameManager>();
 		lifesLeftPrefavs = new GameObject[gameManager.lives];
@@ -21,8 +20,7 @@ public class GuiScript : MonoBehaviour {
 			lifesLeftPrefavs[i] = lifeLeft;
 		}
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		int livesDiffs = lifesLeftPrefavs.Length - gameManager.lives;
 		if (livesDiffs > 0) {
