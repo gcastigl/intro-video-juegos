@@ -14,7 +14,7 @@ public class Defender : MonoBehaviour {
 	void Update() {
 		float inputX = Input.GetAxis("Horizontal");
 		float inputY = Input.GetAxis("Vertical");
-		movement = new Vector2(speed.x * inputX, speed.y * inputY);
+		movement = new Vector2(speed.x * inputX, 0);
 		if (Input.GetKey(KeyCode.Space)) {
 			gun.shoot(new Vector3(0, 1, 0));
 		}
