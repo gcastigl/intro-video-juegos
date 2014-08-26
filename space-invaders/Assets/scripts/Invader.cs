@@ -16,4 +16,8 @@ public class Invader : MonoBehaviour {
 			permissionToShoot = false;
 		}
 	}
+
+	void OnTriggerEnter(Collider other) {
+		Destroy(other.gameObject);
+	}
 }

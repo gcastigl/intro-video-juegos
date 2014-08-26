@@ -51,7 +51,7 @@ public class InvaderManager : MonoBehaviour {
 		if (escapedMinX() || escapedMaxX()) {
 			lastVelX = velocity.x;
 			velocity = new Vector3(0, -1f);
-			targetPosY = transform.position.y - 0.3f;
+			targetPosY = transform.position.y - 0.5f;
 			goingDown = true;
 		}
 		if (transform.position.y < targetPosY && goingDown) {

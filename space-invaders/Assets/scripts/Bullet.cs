@@ -16,13 +16,15 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject != shooter) {
-			Health health = other.gameObject.GetComponent<Health>();
-			if (health != null) {
-				health.damage(1);
+		if (shooter != null) {
+			if (other.gameObject != shooter) {
+				Health health = other.gameObject.GetComponent<Health>();
+				if (health != null) {
+					health.damage(1);
+				}
+				shooter.audio.Play();
+				Destroy(gameObject);
 			}
-			shooter.audio.Play();
-			Destroy(gameObject);
 		}
 	}
 

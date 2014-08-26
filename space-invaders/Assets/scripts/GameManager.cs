@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour {
 
 	void Update () {
 		if (defender == null) {
-			Debug.Log("Respawn");
 			if (lives > 0) {
 				lives--;
 				newDefender();
