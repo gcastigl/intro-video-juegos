@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 45b9de6def840844f8e16bb4e5f3397b
+guid: bb7789017a93f1344892387be9f1fd3d
 TextureImporter:
   fileIDToRecycleName:
-    21300000: invadertopbullet
+    21300000: win
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

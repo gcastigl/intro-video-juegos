@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour {
 	public float ttd;
 	public GameObject shooter;
 	public int hitAmount;
+	public GameObject explosionPrefab;
 
 	void Start () {
 		Destroy(gameObject, ttd);
@@ -26,8 +27,8 @@ public class Bullet : MonoBehaviour {
 				health.damage(hitAmount);
 			}
 			shooter.audio.Play();
+			Object.Instantiate (explosionPrefab, gameObject.transform.position, Quaternion.identity);
 			Destroy(gameObject);
 		}
 	}
-
 }

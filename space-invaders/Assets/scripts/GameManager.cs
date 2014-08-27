@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject invaders;
 	public Vector3 startLocation;
 	public GameObject gameOverLayer;
+	public GameObject winLayer;
 
 	private bool gameEnded;
 	private GameObject defender = null;
@@ -37,7 +38,10 @@ public class GameManager : MonoBehaviour {
 				}
 			} else if (invaders == null) {
 				gameEnded = true;
-				Debug.Log("Ganaster el juego!");
+				SpriteRenderer render = winLayer.GetComponent<SpriteRenderer>();
+				if (!render.enabled) {
+					render.enabled = true;
+				}
 			}
 		}
 	}
