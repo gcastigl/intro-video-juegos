@@ -15,7 +15,7 @@ public class GuiScript : MonoBehaviour {
 		gameManager = gameManagerObject.GetComponent<GameManager>();
 		lifesLeftPrefavs = new GameObject[gameManager.lives];
 		for (int i = 0; i < gameManager.lives; i++) {
-			Vector3 position = new Vector3(xOffset + i, yOffset, transform.position.z - 1);
+			Vector3 position = new Vector3(xOffset + i, yOffset, transform.position.z + 1);
 			GameObject lifeLeft = Object.Instantiate(lifeLeftPrefav, position, Quaternion.identity) as GameObject;
 			lifesLeftPrefavs[i] = lifeLeft;
 		}
