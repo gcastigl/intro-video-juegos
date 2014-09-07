@@ -23,4 +23,8 @@ public class Invader : MonoBehaviour {
 			Destroy(other.gameObject);
 		}
 	}
+
+	void OnDestroy(){
+		Object.Instantiate (gameObject, gameObject.transform.position, Quaternion.identity);
+	}
 }
