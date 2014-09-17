@@ -9,7 +9,6 @@ public class MouseLook : MonoBehaviour
 	Vector2 _mouseAbsolute;
 	Vector2 _smoothMouse;
 
-	public Vector3 preferedPosition;
 	public Vector2 clampInDegrees = new Vector2(360, 180);
 	public bool lockCursor;
 	public Vector2 sensitivity = new Vector2(2, 2);
