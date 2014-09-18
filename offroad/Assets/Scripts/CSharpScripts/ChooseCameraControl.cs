@@ -16,18 +16,25 @@ public class ChooseCameraControl : MonoBehaviour {
 	private Quaternion targetRotation;
 	private Vector3 targetLocation;
 	private GameObject target;
+	public GameObject guiText1;
+	public GameObject guiText2;
 
 	void Start () {
 		targetRotation = transform.rotation;
 		targetLocation = transform.position;
+		guiText2.SetActive(false);
 	}
 	
 	void Update () {
 		if (Input.GetKey("1")) {
+			guiText1.SetActive(false);
+			guiText2.SetActive(true);
 			targetRotation = Quaternion.Euler(option1RotationEuler);
 			targetLocation = option1Location;
 			target = option1;
 		} else if (Input.GetKey("2")) {
+			guiText1.SetActive(false);
+			guiText2.SetActive(true);
 			targetRotation = Quaternion.Euler(option2RotationEuler);
 			targetLocation = option2Location;
 			target = option2;
