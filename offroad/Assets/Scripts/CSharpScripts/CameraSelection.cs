@@ -10,6 +10,8 @@ public class CameraSelection : MonoBehaviour {
 	public CarCamera carCamera;
 	public MouseLook mouseLook;
 
+	public GameObject driverPosition;
+
 	void Start () {
 	}
 
@@ -18,7 +20,7 @@ public class CameraSelection : MonoBehaviour {
 			selectedCamera = DRIVER_CAMERA;
 			carCamera.enabled = false;
 			mouseLook.enabled = true;
-			transform.position = transform.parent.position + mouseLook.preferedPosition;
+			transform.position = driverPosition.transform.position;
 		} else if (selectedCamera != REAR_CAMERA && Input.GetKey ("2")) {
 			selectedCamera = REAR_CAMERA;
 			carCamera.enabled = true;
