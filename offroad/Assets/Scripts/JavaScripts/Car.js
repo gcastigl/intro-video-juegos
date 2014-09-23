@@ -511,30 +511,20 @@ function CalculateState()
 
 function ApplyThrottle(canDrive : boolean, relativeVelocity : Vector3)
 {
-	if (throttle == 0) {
-		return;
-	}
 	if(canDrive)
 	{
 		var throttleForce : float = 0;
 		var brakeForce : float = 0;
 		
-		if (HaveTheSameSign(relativeVelocity.z, throttle)) {
-			if (!handbrake) {
+		if (HaveTheSameSign(relativeVelocity.z, throttle))
+		{
+			if (!handbrake)
 				throttleForce = Mathf.Sign(throttle) * currentEnginePower * rigidbody.mass;
-			}
-		} else {
+		}
+		else
 			brakeForce = Mathf.Sign(throttle) * engineForceValues[0] * rigidbody.mass;
-		}
-		var force : Vector3 = transform.forward * Time.deltaTime * (throttleForce + brakeForce);
-		if (currentGear == 0 && 0 < relativeVelocity.z && relativeVelocity.z < 2.5f) {
-			var angle : float = Vector3.AngleBetween(Vector3.up, transform.forward);
-			if (angle > 3.14 / 4) {
-				force *= 15;
-			}
-			
-		}
-		rigidbody.AddForce(force);
+		
+		rigidbody.AddForce(transform.forward * Time.deltaTime * (throttleForce + brakeForce));
 	}
 }
 
