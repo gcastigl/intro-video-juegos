@@ -6,6 +6,8 @@ using System.Collections;
 [RequireComponent (typeof (Drivetrain))]
 public class CarController : MonoBehaviour {
 
+	public UserCarController controls;
+
 	// Add all wheels of the car here, so brake and steering forces can be applied to them.
 	public Wheel[] wheels;
 	
@@ -86,6 +88,9 @@ public class CarController : MonoBehaviour {
 	// Initialize
 	void Start () 
 	{
+		if (controls == null) {
+			controls = new UserCarController();
+		}
 		if (centerOfMass != null)
 			rigidbody.centerOfMass = centerOfMass.localPosition;
 		rigidbody.inertiaTensor *= inertiaFactor;
@@ -104,9 +109,9 @@ public class CarController : MonoBehaviour {
 			optimalSteering = 0;
 				
 		float steerInput = 0;
-		if (Input.GetKey (KeyCode.LeftArrow)) {
+		if (controls.left) {
 				steerInput = -1;
-		} if (Input.GetKey (KeyCode.RightArrow))
+		} if (controls.right)
 			steerInput = 1;
 
 		if (steerInput < steering)
@@ -130,16 +135,16 @@ public class CarController : MonoBehaviour {
 		
 		// Throttle/Brake
 
-		bool accelKey = Input.GetKey (KeyCode.UpArrow);
-		bool brakeKey = Input.GetKey (KeyCode.DownArrow);
+		bool accelKey = controls.up;
+		bool brakeKey = controls.down;
 		
 		if (drivetrain.automatic && drivetrain.gear == 0)
 		{
-			accelKey = Input.GetKey (KeyCode.DownArrow);
-			brakeKey = Input.GetKey (KeyCode.UpArrow);
+			accelKey = controls.down;
+			brakeKey = controls.up;
 		}
 		
-		if (Input.GetKey (KeyCode.LeftShift))
+		if (controls.lshift)
 		{
 			throttle += Time.deltaTime / throttleTime;
 			throttleInput += Time.deltaTime / throttleTime;
@@ -187,19 +192,19 @@ public class CarController : MonoBehaviour {
 		throttleInput = Mathf.Clamp (throttleInput, -1, 1);
 				
 		// Handbrake
-		handbrake = Mathf.Clamp01 ( handbrake + (Input.GetKey (KeyCode.Space)? Time.deltaTime: -Time.deltaTime) );
+		handbrake = Mathf.Clamp01 ( handbrake + (controls.handBreak ? Time.deltaTime: -Time.deltaTime) );
 		
 		// Gear shifting
 		float shiftThrottleFactor = Mathf.Clamp01((Time.time - lastShiftTime)/shiftSpeed);
 		drivetrain.throttle = throttle * shiftThrottleFactor;
 		drivetrain.throttleInput = throttleInput;
 		
-		if(Input.GetKeyDown(KeyCode.A))
+		if(controls.shiftUp)
 		{
 			lastShiftTime = Time.time;
 			drivetrain.ShiftUp ();
 		}
-		if(Input.GetKeyDown(KeyCode.Z))
+		if(controls.shiftDown)
 		{
 			lastShiftTime = Time.time;
 			drivetrain.ShiftDown ();
@@ -213,11 +218,8 @@ public class CarController : MonoBehaviour {
 			w.steering = steering;
 		}
 	}
-	
-	// Debug GUI. Disable when not needed.
-	void OnGUI ()
-	{
-		GUI.Label (new Rect(0,60,100,200),"km/h: "+rigidbody.velocity.magnitude * 3.6f);
-		tractionControl = GUI.Toggle(new Rect(0,80,300,20), tractionControl, "Traction Control (bypassed by shift key)");
+
+	void OnGUI () {
+		GUI.Label (new Rect(0,60,100,200), "km/h: " + rigidbody.velocity.magnitude * 3.6f);
 	}
 }
