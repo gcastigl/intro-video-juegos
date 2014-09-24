@@ -31,6 +31,10 @@ public class ChooseCameraControl : MonoBehaviour {
 	}
 	
 	void Update () {
+		if (Input.GetKey(KeyCode.Escape)) {
+			Application.Quit();
+			return;
+		}
 		if (Input.GetKey("1")) {
 			guiText1.SetActive(false);
 			guiText2.SetActive(true);
