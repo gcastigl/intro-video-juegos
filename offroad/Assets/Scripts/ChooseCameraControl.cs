@@ -34,12 +34,14 @@ public class ChooseCameraControl : MonoBehaviour {
 			targetRotation = Quaternion.Euler(option1RotationEuler);
 			targetLocation = option1Location;
 			target = option1;
+			setSelected(1);
 		} else if (Input.GetKey("2")) {
 			guiText1.SetActive(false);
 			guiText2.SetActive(true);
 			targetRotation = Quaternion.Euler(option2RotationEuler);
 			targetLocation = option2Location;
 			target = option2;
+			setSelected(2);
 		}
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * smoothFactor);
 		transform.position = Vector3.Lerp(transform.position, targetLocation, Time.deltaTime * smoothFactor);
@@ -51,5 +53,9 @@ public class ChooseCameraControl : MonoBehaviour {
 			guiText2.SetActive(false);
 			guiText3.SetActive(true);
 		}
+	}
+
+	private void setSelected(int carType) {
+		PlayerPrefs.SetInt("carType", carType);
 	}
 }

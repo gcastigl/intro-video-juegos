@@ -3,12 +3,17 @@ using System.Collections;
 
 public class OffroadGame : MonoBehaviour {
 
+	public Vector3 startLocation;
+	public GameObject[] carPrefabs;
 	public float remaningSeconds = 60;
 
 	private bool lost;
 	private bool beaten;
 
 	void Start () {
+		int carType = PlayerPrefs.GetInt("carType");
+		GameObject car = GameObject.Instantiate(carPrefabs[carType - 1]) as GameObject;
+		car.transform.position = startLocation;
 	}
 
 	void Update () {
