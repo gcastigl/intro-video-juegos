@@ -6,14 +6,22 @@ public class OffroadGame : MonoBehaviour {
 	public Vector3 startLocation;
 	public GameObject[] carPrefabs;
 	public float remaningSeconds = 60;
+	public int defaultChoice = 1;
+
+	public GameObject winScreen;
+	public GameObject lostScreen;
 
 	private bool lost;
 	private bool beaten;
-
+	private GameObject player;
+	
 	void Start () {
 		int carType = PlayerPrefs.GetInt("carType");
-		GameObject car = GameObject.Instantiate(carPrefabs[carType - 1]) as GameObject;
-		car.transform.position = startLocation;
+		if (carType == 0) {
+			carType = defaultChoice;
+		}
+		player = GameObject.Instantiate(carPrefabs[carType - 1]) as GameObject;
+		player.transform.position = startLocation;
 	}
 
 	void Update () {
@@ -25,7 +33,7 @@ public class OffroadGame : MonoBehaviour {
 
 	void OnGUI() {
 		if (beaten) {
-			GUI.Label (new Rect (Screen.width / 2 - 50, Screen.height / 2, 100, 20), "A winner is you! =)");
+			winScreen.SetActive(true);
 		} else if (lost) {
 			GUI.Label (new Rect (Screen.width / 2 - 110, Screen.height / 2, 220, 20), "Perdiste! Too hard for you?");
 		} else {
@@ -33,12 +41,15 @@ public class OffroadGame : MonoBehaviour {
 			GUI.Label(new Rect(Screen.width - 120, 10, 100, 20), "Tiempo: " + seconds + " [Seg]");
 		}
 		if (isEndOfgame()) {
-			GUI.Label (new Rect (Screen.width / 2 - 125, Screen.height / 2 + 20, 250, 20), "Enter para volver al menu principal");
-			GUI.Label (new Rect (Screen.width / 2 - 50, Screen.height / 2 + 40, 100, 20), "R para reiniciar");
+			gameObject.GetComponent<AudioSource>().enabled = false;
+			player.GetComponentInChildren<AudioListener>().enabled = false;
+			player.GetComponentInChildren<UserCarController>().enabled = false;
 			if (Input.GetKey(KeyCode.Return)) {
+				Time.timeScale = 1;
 				Application.LoadLevel("main-menu");
 			}
 			if (Input.GetKey("r")) {
+				Time.timeScale = 1;
 				Application.LoadLevel (Application.loadedLevelName);
 			}
 

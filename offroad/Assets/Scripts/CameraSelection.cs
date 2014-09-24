@@ -13,18 +13,23 @@ public class CameraSelection : MonoBehaviour {
 	public GameObject driverPosition;
 
 	void Start () {
+		setDriverCamera();
 	}
 
 	void Update () {
 		if (selectedCamera != DRIVER_CAMERA && Input.GetKey ("1")) {
-			selectedCamera = DRIVER_CAMERA;
-			carCamera.enabled = false;
-			mouseLook.enabled = true;
-			transform.position = driverPosition.transform.position;
+			setDriverCamera();
 		} else if (selectedCamera != REAR_CAMERA && Input.GetKey ("2")) {
 			selectedCamera = REAR_CAMERA;
 			carCamera.enabled = true;
 			mouseLook.enabled = false;
 		}
+	}
+
+	private void setDriverCamera() {
+		selectedCamera = DRIVER_CAMERA;
+		carCamera.enabled = false;
+		mouseLook.enabled = true;
+		transform.position = driverPosition.transform.position;
 	}
 }
