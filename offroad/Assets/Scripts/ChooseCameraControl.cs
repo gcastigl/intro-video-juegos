@@ -18,11 +18,13 @@ public class ChooseCameraControl : MonoBehaviour {
 	private GameObject target;
 	public GameObject guiText1;
 	public GameObject guiText2;
+	public GameObject guiText3;
 
 	void Start () {
 		targetRotation = transform.rotation;
 		targetLocation = transform.position;
 		guiText2.SetActive(false);
+		guiText3.SetActive(false);
 	}
 	
 	void Update () {
@@ -46,6 +48,8 @@ public class ChooseCameraControl : MonoBehaviour {
 			UserCarController controller = target.gameObject.GetComponentInParent<UserCarController>();
 			controller.enabled = true;
 			gameObject.SetActive(false);
+			guiText2.SetActive(false);
+			guiText3.SetActive(true);
 		}
 	}
 }
