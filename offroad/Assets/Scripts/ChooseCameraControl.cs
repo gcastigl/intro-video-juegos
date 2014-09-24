@@ -43,8 +43,9 @@ public class ChooseCameraControl : MonoBehaviour {
 		transform.position = Vector3.Lerp(transform.position, targetLocation, Time.deltaTime * smoothFactor);
 		if (target != null && Input.GetKey("space")) {
 			target.SetActive(true);
+			UserCarController controller = target.gameObject.GetComponentInParent<UserCarController>();
+			controller.enabled = true;
 			gameObject.SetActive(false);
-
 		}
 	}
 }
