@@ -35,10 +35,7 @@ public class OffroadGame : MonoBehaviour {
 		if (beaten) {
 			winScreen.SetActive(true);
 		} else if (lost) {
-			GUI.Label (new Rect (Screen.width / 2 - 110, Screen.height / 2, 220, 20), "Perdiste! Too hard for you?");
-		} else {
-			int seconds = (int) remaningSeconds;
-			GUI.Label(new Rect(Screen.width - 120, 10, 100, 20), "Tiempo: " + seconds + " [Seg]");
+			lostScreen.SetActive(true);
 		}
 		if (isEndOfgame()) {
 			gameObject.GetComponent<AudioSource>().enabled = false;
@@ -52,7 +49,6 @@ public class OffroadGame : MonoBehaviour {
 				Time.timeScale = 1;
 				Application.LoadLevel (Application.loadedLevelName);
 			}
-
 		}
 	}
 

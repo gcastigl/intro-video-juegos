@@ -19,6 +19,7 @@ public class ChooseCameraControl : MonoBehaviour {
 	public GameObject guiText1;
 	public GameObject guiText2;
 	public GameObject guiText3;
+	public GameObject helpText;
 
 	void Start () {
 		targetRotation = transform.rotation;
@@ -52,6 +53,7 @@ public class ChooseCameraControl : MonoBehaviour {
 			gameObject.SetActive(false);
 			guiText2.SetActive(false);
 			guiText3.SetActive(true);
+			helpText.SetActive(true);
 		}
 	}
 
