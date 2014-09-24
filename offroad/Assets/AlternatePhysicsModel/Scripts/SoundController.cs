@@ -36,8 +36,8 @@ public class SoundController : MonoBehaviour {
 	}
 	
 	void Update () {
-		engineSource.pitch = 0.5f + 1.3f * drivetrain.rpm / drivetrain.maxRPM;
-		engineSource.volume = 0.4f + 0.6f * drivetrain.throttle;
+		engineSource.pitch = 0.3f + 1.3f * drivetrain.rpm / drivetrain.maxRPM;
+		engineSource.volume = 0.2f + 0.4f * drivetrain.throttle;
 		skidSource.volume = Mathf.Clamp01( Mathf.Abs(car.slipVelo) * 0.2f - 0.5f );
 	}
 }
