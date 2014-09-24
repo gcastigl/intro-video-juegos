@@ -5,27 +5,18 @@ public class OffroadGame : MonoBehaviour {
 
 	private bool lost;
 	private bool beaten;
-	public bool paused;
+	public float remaningSeconds = 60 * 1000;
 
 	void Start () {
-		paused = false;
 	}
 
 	void Update () {
-		/*
-		if (Input.GetKeyUp("p")) {
-			paused = !paused;
-			Time.timeScale = paused ? 0 : 1;
-		}
-		if (paused) {
-			// GUIContent content = new GUIContent();
-
-		}
-		*/
-		// Debug.Log (paused);
+		remaningSeconds -= Time.deltaTime;
 	}
 
 	void OnGUI() {
+		int seconds = (int) remaningSeconds;
+		GUI.Label(new Rect(Screen.width - 120, 10, 100, 20), "Tiempo: " + seconds + " [Seg]");
 		if (beaten) {
 			GUI.Label(new Rect(10, 10, 100, 20), "Ganaste!!");
 		} else if (lost) {

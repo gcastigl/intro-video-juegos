@@ -88,9 +88,6 @@ public class CarController : MonoBehaviour {
 	// Initialize
 	void Start () 
 	{
-		if (controls == null) {
-			controls = new UserCarController();
-		}
 		if (centerOfMass != null)
 			rigidbody.centerOfMass = centerOfMass.localPosition;
 		rigidbody.inertiaTensor *= inertiaFactor;
@@ -219,7 +216,4 @@ public class CarController : MonoBehaviour {
 		}
 	}
 
-	void OnGUI () {
-		GUI.Label (new Rect(0,60,100,200), "km/h: " + rigidbody.velocity.magnitude * 3.6f);
-	}
 }
