@@ -35,8 +35,13 @@ function OnGUI() {
 		//Make a background box
 		GUI.Box(Rect(Screen.width /2 - 100,Screen.height /2 - 100,250,100), "Pause");
 		//Make quit game button
-		if (GUI.Button (Rect (Screen.width / 2 - 100,Screen.height / 2 + 00, 250, 50), "Quit Game")) {
-			Application.Quit();
-		}	
+		if (GUI.Button (Rect (Screen.width / 2 - 100, Screen.height / 2 - 50, 250, 50), "Restart?")) {
+			Time.timeScale = 1;
+			Application.LoadLevel(Application.loadedLevel);
+		}
+		if (GUI.Button (Rect (Screen.width / 2 - 100,Screen.height / 2 + 00, 250, 50), "Main menu?")) {
+			Time.timeScale = 1;
+			Application.LoadLevel("main-menu");
+		}
 	}
 }

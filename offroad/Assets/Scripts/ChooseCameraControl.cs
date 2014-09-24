@@ -26,6 +26,8 @@ public class ChooseCameraControl : MonoBehaviour {
 		targetLocation = transform.position;
 		guiText2.SetActive(false);
 		guiText3.SetActive(false);
+		Screen.showCursor = false;
+		Screen.lockCursor = true;
 	}
 	
 	void Update () {
