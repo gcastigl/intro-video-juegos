@@ -29,8 +29,9 @@ public class UserCarController : MonoBehaviour {
 	}
 
 	void OnGUI () {
-		GUI.Label(new Rect(10, 10, 100, 20), "RPM: " + driveTrain.rpm);
-		GUI.Label(new Rect(10, 30, 100, 20), "Gear: " + (driveTrain.gear - 1));
+
+		GUI.Label(new Rect(Screen.width * 0.88f, Screen.height - 70, 100, 20), "RPM: " + driveTrain.rpm);
+		GUI.Label(new Rect(Screen.width * 0.88f, Screen.height - 100, 100, 20), "Gear: " + (driveTrain.gear - 1));
 		// driveTrain.automatic = GUILayout.Toggle(automatic, "Automatic Transmission");
 		speedometer.speed = rigidbody.velocity.magnitude * 3.6f;
 	}
