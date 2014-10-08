@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 
-public class DungeonLoader : MonoBehaviour {
+public class DungeonManager : MonoBehaviour {
 
 	public GameObject[] items;
 	public GameObject itemNode;
@@ -29,6 +29,10 @@ public class DungeonLoader : MonoBehaviour {
 			item.transform.parent = node.transform;
 			item.transform.position = new Vector3(x, 1, z);
 		}
+	}
+
+	public void spawnDestroyed() {
+
 	}
 
 	void Update () {
