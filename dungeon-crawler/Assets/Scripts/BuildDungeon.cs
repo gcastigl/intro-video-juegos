@@ -4,6 +4,7 @@ using System.Collections;
 public class BuildDungeon : MonoBehaviour {
 
 	public Texture2D texture;
+	public Material ceilMaterial;
 
 	public float width = 129;
 	public float lenght = 129;
@@ -44,9 +45,8 @@ public class BuildDungeon : MonoBehaviour {
 		addRandomWalls(heights);
 		for (int i = 0; i < iterations; i++) {step (heights);}
 		surroundWithWalls (heights);
-
 		data.SetHeights (0, 0, heights);
-		buildCeil(terrain);
+		buildCeil(terrain, heights);
 	}
 
 	private GameObject createTerrainGO(string name) {
@@ -65,18 +65,44 @@ public class BuildDungeon : MonoBehaviour {
 		GameObject terrainGo = Terrain.CreateTerrainGameObject(data);
 		terrainGo.transform.parent = transform;
 		terrainGo.name = name;
+		terrainGo.isStatic = false;
 		return terrainGo;
 	}
 
-	private void buildCeil(Terrain terrain) {
-		GameObject cailGO = createTerrainGO ("ceil");
+	private void buildCeil(Terrain floorTerrain, float[,] floorHeights) {
+		GameObject ceilGO = createTerrainGO ("ceil");
+		Terrain ceilTerrain = ceilGO.GetComponent<Terrain> ();
+		float[,] ceilHeights = new float[floorHeights.GetLength(0), floorHeights.GetLength(1)];
+		int maxColIndex = floorHeights.GetLength (1) - 1;
+		for (int row = 0; row < floorHeights.GetLength(0); row++) {
+			for (int col = 0; col < floorHeights.GetLength(1); col++) {
+				ceilHeights[row, col] = floorHeights[row, maxColIndex - col];
+			}
+		}
+		ceilTerrain.terrainData.SetHeights (0, 0, ceilHeights);
+		/**
+		 * Unity terrains CAN NOT BE ROTATED. No work around!
+		 * 
+		 * So, in order to make a ceil we need to crete the ceil upside down. 
+		 * Then export it it as a Mesh (as Obj -> Load(Obj)) and then create a
+		 * MeshFilter with the generatoed mesh. Then turn it around. 
+		 * 
+		 * How hard can it be?? =/
+		 */
 		TerrainToObj exporter = new TerrainToObj();
-		exporter.terrainGO = cailGO;
-		exporter.execute ();
-		// UnityEditor.EditorWindow.GetWindow<ExportTerrain>();
+		exporter.terrainGO = ceilGO;
+		Mesh mesh = exporter.execute ();
+
+		Destroy (ceilTerrain);
+		Destroy (ceilGO.GetComponent<TerrainCollider>());
+
+		MeshFilter meshFilter = ceilGO.AddComponent<MeshFilter>();
+		meshFilter.mesh = mesh;
+		MeshRenderer meshRender = ceilGO.AddComponent<MeshRenderer>();
+		meshRender.material = ceilMaterial;
+		/* */
+		// ceilGO.transform.localEulerAngles = new Vector3 (0, 0, 180); 
 	}
-
-
 
 	private void addRandomWalls(float[,] heights) {
 		for (int x = 0; x < heights.GetLength(0); x++) {
