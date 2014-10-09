@@ -34,7 +34,8 @@ public class BuildDungeon : MonoBehaviour {
 	*/
 
 	void Start () {
-		Terrain terrain = createTerrainGO();
+		GameObject terrainGo = createTerrainGO("floor");
+		Terrain terrain = terrainGo.GetComponent<Terrain> ();
 		if (useSeed) {
 			Random.seed = seed;
 		}
@@ -45,9 +46,10 @@ public class BuildDungeon : MonoBehaviour {
 		surroundWithWalls (heights);
 
 		data.SetHeights (0, 0, heights);
+		buildCeil(terrain);
 	}
 
-	private Terrain createTerrainGO() {
+	private GameObject createTerrainGO(string name) {
 		TerrainData data = new TerrainData ();
 		SplatPrototype splat = new SplatPrototype();
 		splat.texture = texture;
@@ -62,9 +64,19 @@ public class BuildDungeon : MonoBehaviour {
 		data.SetDetailResolution(32, 8);
 		GameObject terrainGo = Terrain.CreateTerrainGameObject(data);
 		terrainGo.transform.parent = transform;
-		Terrain terrain = terrainGo.GetComponent<Terrain> ();
-		return terrain;
+		terrainGo.name = name;
+		return terrainGo;
 	}
+
+	private void buildCeil(Terrain terrain) {
+		GameObject cailGO = createTerrainGO ("ceil");
+		TerrainToObj exporter = new TerrainToObj();
+		exporter.terrainGO = cailGO;
+		exporter.execute ();
+		// UnityEditor.EditorWindow.GetWindow<ExportTerrain>();
+	}
+
+
 
 	private void addRandomWalls(float[,] heights) {
 		for (int x = 0; x < heights.GetLength(0); x++) {
