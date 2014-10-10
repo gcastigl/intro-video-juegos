@@ -13,20 +13,24 @@ public class BuildDungeon {
 		this.ceilMaterial = ceilMaterial;
 	}
 
-	public float[,] Build(GameObject dungeon) {
-		GameObject terrainGo = createTerrainGO(dungeon, "floor");
+	public Dungeon Build(GameObject dungeonGO) {
+		GameObject terrainGo = createTerrainGO(dungeonGO, "floor");
 		Terrain terrain = terrainGo.GetComponent<Terrain>();
 		if (config.useSeed) {
 			Random.seed = config.seed;
 		}
 		TerrainData data = terrain.terrainData;
 		float[,] heights = new float[config.heightmapResolution, config.heightmapResolution];
+		Dungeon dungeon = new Dungeon(heights);
 		addRandomWalls(heights);
-		for (int i = 0; i < config.iterations; i++) {step (heights);}
-		surroundWithWalls (heights);
+		for (int i = 0; i < config.iterations; i++) {
+			step (dungeon);
+		}
+		removeLonnelyPeeks (dungeon);
+		surroundWithWalls (dungeon.heights);
 		data.SetHeights (0, 0, heights);
-		buildCeil(dungeon, terrain, heights);
-		return heights;
+		buildCeil(dungeonGO, terrain, heights);
+		return dungeon;
 	}
 
 	private GameObject createTerrainGO(GameObject dungeon, string name) {
@@ -73,12 +77,13 @@ public class BuildDungeon {
 		}
 	}
 
-	private void step(float[,] heights) {
-		float[,] clone = heights.Clone () as float[,];
-		for (int row = 0; row < heights.GetLength(0); row++) {
-			for (int col = 0; col < heights.GetLength(1); col++) {
+	private void step(Dungeon dungeon) {
+		float[,] heights = dungeon.heights;
+		Dungeon clone = new Dungeon(heights.Clone () as float[,]);
+		for (int row = 0; row < dungeon.rowsCount(); row++) {
+			for (int col = 0; col < dungeon.columnCount(); col++) {
 				float value = heights[row, col];
-				int aliveNbs = countNeighborsMatching(clone, row, col, 1);
+				int aliveNbs = clone.countNeighborsMatching(row, col, 1);
 				bool setAlive = false;
 				if (value == 1) {
 					bool starving = aliveNbs < config.starvationLimit;// || aliveNbs > config.overpopLimit
@@ -91,23 +96,26 @@ public class BuildDungeon {
 		}
 	}
 
-	private int countNeighborsMatching(float[,] heights, int row, int col, int value) {
-		int count = 0;
-		for (int rowi = row - 1; rowi <= row + 1; rowi++) {
-			for (int colj = col - 1; colj <= col + 1; colj++) {
-				if (rowi == row && colj == col) {
-					continue;
-				}
-				if (rowi < 0 || colj < 0 || rowi >= heights.GetLength(0) || colj >= heights.GetLength(1)) {
-					count++;
-				} else if (heights[rowi, colj] == value) {
-					count++;
+
+	private void removeLonnelyPeeks(Dungeon dungeon) {
+		float[,] heights = dungeon.heights;
+		Dungeon clone = new Dungeon(heights.Clone () as float[,]);
+		for (int row = 0; row < heights.GetLength(0); row++) {
+			for (int col = 0; col < heights.GetLength(1); col++) {
+				float value = heights[row, col];
+				if (value == 1) {
+					int aliveNbs = clone.countNeighborsMatching(row, col, 0);
+					bool setDead = (aliveNbs == 8);
+					heights[row, col] = setDead ? 0 : 1;
+				} else {
+					int aliveNbs = clone.countNeighborsMatching(row, col, 1);
+					bool setAlive = (aliveNbs == 8);
+					heights[row, col] = setAlive ? 1 : 0;
 				}
 			}
 		}
-		return count;
 	}
-	
+
 	private void surroundWithWalls(float[,] heights) {
 		for (int row = 0; row < heights.GetLength(0); row++) {
 			for (int col = 0; col < heights.GetLength(1); col++) {

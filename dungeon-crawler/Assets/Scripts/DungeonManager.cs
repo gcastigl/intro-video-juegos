@@ -13,14 +13,16 @@ public class DungeonManager : MonoBehaviour {
 	public GameObject[] spawns;
 
 	void Start () {
-		float[,] heights = new BuildDungeon(buildConfig, texture, ceilMaterial).Build(gameObject);
-		// new PopulateDungeon ().Populate (gameObject, heights);
+		Dungeon dungeon = new BuildDungeon(buildConfig, texture, ceilMaterial).Build(gameObject);
+		new PopulateDungeon().Populate(gameObject, dungeon);
+		if (!dungeon.valid) {
+			Debug.Log ("Re hacer nivel");
+			return;
+		}
+		player.transform.position = new Vector3(dungeon.playerRow, 1, dungeon.playerCol);
 		player.SetActive (true);
 	}
-	
-	public void spawnDestroyed() {
 
-	}
 
 	void Update () {
 	
