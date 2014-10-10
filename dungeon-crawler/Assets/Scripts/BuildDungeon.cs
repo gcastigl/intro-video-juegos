@@ -1,55 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BuildDungeon : MonoBehaviour {
+public class BuildDungeon {
+	
+	private Texture2D texture;
+	private Material ceilMaterial;
+	private BuildDungeonConfig config;
 
-	public Texture2D texture;
-	public Material ceilMaterial;
-
-	public float width = 129;
-	public float lenght = 129;
-	public float height = 4;
-
-	public float magic = 4f;
-
-	// MUST be power of two + 1
-	public int heightmapResolution = 129;
-
-	public bool useSeed = false;
-	public int seed;
-
-	// number of times we perform the simulation step.
-	public int iterations = 5;
-
-	// how dense the initial grid is with living cells
-	public float initialWallP  = 0.38f;
-
-	// number of neighbours that cause a dead cell to become alive.
-	public int birthNumber = 2;
-
-	// lower neighbour limit at which cells start dying.
-	public int starvationLimit = 4;
-	/*
-	// upper neighbour limit at which cells start dying.
-	public int overpopLimit = 5;
-	*/
-
-	void Start () {
-		GameObject terrainGo = createTerrainGO("floor");
-		Terrain terrain = terrainGo.GetComponent<Terrain> ();
-		if (useSeed) {
-			Random.seed = seed;
-		}
-		TerrainData data = terrain.terrainData;
-		float[,] heights = new float[heightmapResolution, heightmapResolution];
-		addRandomWalls(heights);
-		for (int i = 0; i < iterations; i++) {step (heights);}
-		surroundWithWalls (heights);
-		data.SetHeights (0, 0, heights);
-		buildCeil(terrain, heights);
+	public BuildDungeon(BuildDungeonConfig config, Texture2D texture, Material ceilMaterial) {
+		this.config = config;
+		this.texture = texture;
+		this.ceilMaterial = ceilMaterial;
 	}
 
-	private GameObject createTerrainGO(string name) {
+	public float[,] Build(GameObject dungeon) {
+		GameObject terrainGo = createTerrainGO(dungeon, "floor");
+		Terrain terrain = terrainGo.GetComponent<Terrain>();
+		if (config.useSeed) {
+			Random.seed = config.seed;
+		}
+		TerrainData data = terrain.terrainData;
+		float[,] heights = new float[config.heightmapResolution, config.heightmapResolution];
+		addRandomWalls(heights);
+		for (int i = 0; i < config.iterations; i++) {step (heights);}
+		surroundWithWalls (heights);
+		data.SetHeights (0, 0, heights);
+		buildCeil(dungeon, terrain, heights);
+		return heights;
+	}
+
+	private GameObject createTerrainGO(GameObject dungeon, string name) {
 		TerrainData data = new TerrainData ();
 		SplatPrototype splat = new SplatPrototype();
 		splat.texture = texture;
@@ -58,57 +38,35 @@ public class BuildDungeon : MonoBehaviour {
 		SplatPrototype[] splats = new SplatPrototype[1];
 		splats[0] = splat;
 		data.splatPrototypes = splats;
-		data.size = new Vector3 (width / magic, height, lenght / magic);
-		data.heightmapResolution = heightmapResolution;
+		data.size = new Vector3 (config.width / config.magic, config.height, config.lenght / config.magic);
+		data.heightmapResolution = config.heightmapResolution;
 		data.baseMapResolution = 1024;
 		data.SetDetailResolution(32, 8);
 		GameObject terrainGo = Terrain.CreateTerrainGameObject(data);
-		terrainGo.transform.parent = transform;
+		terrainGo.transform.parent = dungeon.transform;
 		terrainGo.name = name;
 		terrainGo.isStatic = false;
 		return terrainGo;
 	}
 
-	private void buildCeil(Terrain floorTerrain, float[,] floorHeights) {
-		GameObject ceilGO = createTerrainGO ("ceil");
-		Terrain ceilTerrain = ceilGO.GetComponent<Terrain> ();
-		float[,] ceilHeights = new float[floorHeights.GetLength(0), floorHeights.GetLength(1)];
-		int maxColIndex = floorHeights.GetLength (1) - 1;
-		for (int row = 0; row < floorHeights.GetLength(0); row++) {
-			for (int col = 0; col < floorHeights.GetLength(1); col++) {
-				ceilHeights[row, col] = floorHeights[row, maxColIndex - col];
-			}
-		}
-		ceilTerrain.terrainData.SetHeights (0, 0, ceilHeights);
-		/**
-		 * Unity terrains CAN NOT BE ROTATED. No work around!
-		 * 
-		 * So, in order to make a ceil we need to crete the ceil upside down. 
-		 * Then export it it as a Mesh (as Obj -> Load(Obj)) and then create a
-		 * MeshFilter with the generatoed mesh. Then turn it around. 
-		 * 
-		 * How hard can it be?? =/
-		 */
-		TerrainToObj exporter = new TerrainToObj();
-		exporter.terrainGO = ceilGO;
-		Mesh mesh = exporter.execute ();
-
-		Destroy (ceilTerrain);
-		Destroy (ceilGO.GetComponent<TerrainCollider>());
-
-		MeshFilter meshFilter = ceilGO.AddComponent<MeshFilter>();
-		meshFilter.mesh = mesh;
-		MeshRenderer meshRender = ceilGO.AddComponent<MeshRenderer>();
-		meshRender.material = ceilMaterial;
-		/* */
-		// ceilGO.transform.localEulerAngles = new Vector3 (0, 0, 180); 
+	private void buildCeil(GameObject dungeon, Terrain floorTerrain, float[,] floorHeights) {
+		GameObject ceil = GameObject.CreatePrimitive(PrimitiveType.Plane) as GameObject;
+		ceil.name = "ceil";
+		ceil.transform.parent = dungeon.transform;
+		float scale = config.heightmapResolution / 10f;
+		float dx = config.heightmapResolution / 2f;
+		ceil.transform.localScale = new Vector3 (scale, 1, scale);
+		ceil.transform.localPosition = new Vector3(dx, config.height, dx);
+		ceil.transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 180));
+		MeshRenderer renderer = ceil.GetComponent<MeshRenderer>();
+		renderer.material = ceilMaterial;
 	}
 
 	private void addRandomWalls(float[,] heights) {
 		for (int x = 0; x < heights.GetLength(0); x++) {
 			for (int z = 0; z < heights.GetLength(1); z++) {
 				float random = Random.value;
-				if (random < initialWallP) {
+				if (random < config.initialWallP) {
 					heights[x, z] = 1;
 				}
 			}
@@ -123,10 +81,10 @@ public class BuildDungeon : MonoBehaviour {
 				int aliveNbs = countNeighborsMatching(clone, row, col, 1);
 				bool setAlive = false;
 				if (value == 1) {
-					bool starving = aliveNbs < starvationLimit;// || aliveNbs > overpopLimit
+					bool starving = aliveNbs < config.starvationLimit;// || aliveNbs > config.overpopLimit
 					setAlive = !starving;
 				} else {
-					setAlive = aliveNbs > birthNumber;
+					setAlive = aliveNbs > config.birthNumber;
 				}
 				heights[row, col] = setAlive ? 1 : 0;
 			}
