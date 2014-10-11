@@ -20,16 +20,16 @@ public class BuildDungeon {
 			Random.seed = config.seed;
 		}
 		TerrainData data = terrain.terrainData;
-		float[,] heights = new float[config.heightmapResolution, config.heightmapResolution];
-		Dungeon dungeon = new Dungeon(heights);
+		int[,] heights = new int[config.heightmapResolution, config.heightmapResolution];
+		Dungeon dungeon = new Dungeon(heights, config.width, config.lenght);
 		addRandomWalls(heights);
 		for (int i = 0; i < config.iterations; i++) {
 			step (dungeon);
 		}
-		removeLonnelyPeeks (dungeon);
-		surroundWithWalls (dungeon.heights);
-		data.SetHeights (0, 0, heights);
-		buildCeil(dungeonGO, terrain, heights);
+		removeLonnelyPeeks(dungeon);
+		surroundWithWalls(dungeon);
+		data.SetHeights(0, 0, toFloatArray(dungeon));
+		buildCeil(dungeonGO, terrain);
 		return dungeon;
 	}
 
@@ -53,7 +53,7 @@ public class BuildDungeon {
 		return terrainGo;
 	}
 
-	private void buildCeil(GameObject dungeon, Terrain floorTerrain, float[,] floorHeights) {
+	private void buildCeil(GameObject dungeon, Terrain floorTerrain) {
 		GameObject ceil = GameObject.CreatePrimitive(PrimitiveType.Plane) as GameObject;
 		ceil.name = "ceil";
 		ceil.transform.parent = dungeon.transform;
@@ -66,7 +66,7 @@ public class BuildDungeon {
 		renderer.material = ceilMaterial;
 	}
 
-	private void addRandomWalls(float[,] heights) {
+	private void addRandomWalls(int[,] heights) {
 		for (int x = 0; x < heights.GetLength(0); x++) {
 			for (int z = 0; z < heights.GetLength(1); z++) {
 				float random = Random.value;
@@ -78,52 +78,56 @@ public class BuildDungeon {
 	}
 
 	private void step(Dungeon dungeon) {
-		float[,] heights = dungeon.heights;
-		Dungeon clone = new Dungeon(heights.Clone () as float[,]);
+		int[,] heights = dungeon.heights;
+		Dungeon cloned = new Dungeon(heights.Clone() as int[,]);
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
 			for (int col = 0; col < dungeon.columnCount(); col++) {
-				float value = heights[row, col];
-				int aliveNbs = clone.countNeighborsMatching(row, col, 1);
-				bool setAlive = false;
-				if (value == 1) {
-					bool starving = aliveNbs < config.starvationLimit;// || aliveNbs > config.overpopLimit
-					setAlive = !starving;
+				int wallNbs = cloned.countNeighborsMatching(row, col, 1);
+				bool setWall = false;
+				if (cloned.heights[row, col] == 1) {
+					bool starving = wallNbs < config.starvationLimit;// || wallNbs > config.overpopLimit
+					setWall = !starving;
 				} else {
-					setAlive = aliveNbs > config.birthNumber;
+					setWall = wallNbs > config.birthNumber;
 				}
-				heights[row, col] = setAlive ? 1 : 0;
+				heights[row, col] = setWall ? 1 : 0;
 			}
 		}
 	}
-
-
+	
 	private void removeLonnelyPeeks(Dungeon dungeon) {
-		float[,] heights = dungeon.heights;
-		Dungeon clone = new Dungeon(heights.Clone () as float[,]);
-		for (int row = 0; row < heights.GetLength(0); row++) {
-			for (int col = 0; col < heights.GetLength(1); col++) {
-				float value = heights[row, col];
-				if (value == 1) {
-					int aliveNbs = clone.countNeighborsMatching(row, col, 0);
-					bool setDead = (aliveNbs == 8);
-					heights[row, col] = setDead ? 0 : 1;
-				} else {
-					int aliveNbs = clone.countNeighborsMatching(row, col, 1);
-					bool setAlive = (aliveNbs == 8);
-					heights[row, col] = setAlive ? 1 : 0;
-				}
-			}
-		}
-	}
-
-	private void surroundWithWalls(float[,] heights) {
-		for (int row = 0; row < heights.GetLength(0); row++) {
-			for (int col = 0; col < heights.GetLength(1); col++) {
-				if (row == 0 || row == heights.GetLength(0) - 1 || col == 0 || col == heights.GetLength(1) - 1) {
+		int[,] heights = dungeon.heights;
+		Dungeon clone = new Dungeon(heights.Clone () as int[,]);
+		for (int row = 0; row < dungeon.rowsCount(); row++) {
+			for (int col = 0; col < dungeon.columnCount(); col++) {
+				if (heights[row, col] == 1 && clone.countNeighborsMatching(row, col, 0) == 8) {
+					heights[row, col] = 0;
+				} else if (heights[row, col] == 0 && clone.countNeighborsMatching(row, col, 1) == 8) {
 					heights[row, col] = 1;
 				}
 			}
 		}
 	}
 
+	private void surroundWithWalls(Dungeon dungeon) {
+		int[,] heights = dungeon.heights;
+		for (int row = 0; row < dungeon.rowsCount(); row++) {
+			for (int col = 0; col < dungeon.columnCount(); col++) {
+				if (row == 0 || row == dungeon.rowsCount() - 1 || col == 0 || col == dungeon.columnCount() - 1) {
+					heights[row, col] = 1;
+				}
+			}
+		}
+	}
+
+	private float[,] toFloatArray(Dungeon dungeon) {
+		float[,] heights = new float[dungeon.rowsCount(), dungeon.columnCount()];
+		for (int row = 0; row < dungeon.rowsCount(); row++) {
+			for (int col = 0; col < dungeon.columnCount(); col++) {
+				// TODO: possible add some little noise?
+				heights[row, col] = dungeon.heights[row, col];
+			}
+		}
+		return heights;
+	}
 }

@@ -3,12 +3,20 @@ using System.Collections;
 
 public class Dungeon {
 
-	public float[,] heights;
 	public bool valid;
-	public int playerRow, playerCol;
+	public int[,] heights;
+	public bool[,] accesibles;
+	public float playerRow, playerCol;
+	public float worldWidth, worldLenght;
 
-	public Dungeon(float[,] heights) {
+	public Dungeon(int[,] heights) : this(heights, 0, 0) {
+	}
+
+	public Dungeon(int[,] heights, float worldWidth, float worldLenght) {
 		this.heights = heights;
+		this.accesibles = new bool[rowsCount (), columnCount ()];
+		this.worldWidth = worldWidth;
+		this.worldLenght = worldLenght;
 	}
 
 	public int rowsCount() {
@@ -19,7 +27,7 @@ public class Dungeon {
 		return heights.GetLength (1);
 	}
 
-	public float value(int row, int col) {
+	public int value(int row, int col) {
 		return heights [row, col];
 	}
 
@@ -44,4 +52,11 @@ public class Dungeon {
 		return count;
 	}
 
+	public float rowToWorld(int row) {
+		return row *  worldWidth / (float) rowsCount();
+	}
+
+	public float columnToWorld(int col) {
+		return col *  worldLenght / (float) columnCount();
+	}
 }

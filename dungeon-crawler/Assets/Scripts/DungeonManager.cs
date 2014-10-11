@@ -8,18 +8,18 @@ public class DungeonManager : MonoBehaviour {
 	public Material ceilMaterial;
 
 	public BuildDungeonConfig buildConfig;
-
+	
+	public GameObject[] enemies;
 	public GameObject[] items;
-	public GameObject[] spawns;
 
 	void Start () {
 		Dungeon dungeon = new BuildDungeon(buildConfig, texture, ceilMaterial).Build(gameObject);
-		new PopulateDungeon().Populate(gameObject, dungeon);
+		new PopulateDungeon(enemies).Populate(gameObject, dungeon);
 		if (!dungeon.valid) {
 			Debug.Log ("Re hacer nivel");
 			return;
 		}
-		player.transform.position = new Vector3(dungeon.playerRow, 1, dungeon.playerCol);
+		player.transform.position = new Vector3(dungeon.playerCol, 1, dungeon.playerRow);
 		player.SetActive (true);
 	}
 
