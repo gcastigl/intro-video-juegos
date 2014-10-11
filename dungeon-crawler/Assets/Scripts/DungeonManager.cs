@@ -16,7 +16,7 @@ public class DungeonManager : MonoBehaviour {
 			Debug.Log ("Re hacer nivel");
 			return;
 		}
-		player.transform.position = new Vector3(dungeon.playerCol, 1, dungeon.playerRow);
+		player.transform.position = new Vector3(dungeon.columnToWorld(dungeon.playerCol), 1, dungeon.rowToWorld(dungeon.playerRow));
 		player.SetActive (true);
 	}
 

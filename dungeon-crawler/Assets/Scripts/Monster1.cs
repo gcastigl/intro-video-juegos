@@ -3,24 +3,28 @@ using System.Collections;
 
 public class Monster1 : MonoBehaviour {
 
-	public float moveSpeed = 2;
-	public float turnSpeed = 2;
+	public float moveSpeed = 1;
+	public float turnSpeed = 1;
+	public float viewDistance = 30;
 
-	private GameObject player;
+	private Player player;
 
 	void Start () {
-		player = GameObject.FindGameObjectWithTag("Player");
+		GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+		player = playerGO.GetComponent<Player>();
 	}
 	
 	void Update () {
 		// FIXME: no existe un distanceSq?? (Chequeo mas eficiente)
 		float distance = Vector3.Distance(player.transform.position, transform.position);
-		if (distance > 50) {
+		float computedViewDistance = distance * (player.isTorchHigh() ? 1 : 0.5f);
+		if (distance > viewDistance) {
 			return;
 		}
 		if (distance < 2) {
 			return;
 		}
+		Debug.Log ("Detectado: " + name);
 		Vector3 direction = player.transform.position - transform.position;
 		Vector3 moveVector = direction.normalized * moveSpeed * Time.deltaTime;
 		transform.position += moveVector;
