@@ -40,4 +40,6 @@ public struct BuildDungeonConfig {
 
 	public GameObject[] treasures;
 
+	public GameObject entranceDoor;
+
 }

@@ -13,6 +13,7 @@ public class PopulateDungeon {
 		evaluateAndSetStartPosition(dungeon);
 		if (dungeon.valid) {
 			Debug.Log ("El nivel parece bueno");
+			placeEntranceDoor(dungeonGO, dungeon);
 			placeTreasures(dungeonGO, dungeon);
 			placeEnemies(dungeonGO, dungeon);
 		} else {
@@ -44,7 +45,29 @@ public class PopulateDungeon {
 			}
 		}
 	}
-	
+
+	private void placeEntranceDoor(GameObject dungeonGO, Dungeon dungeon) {
+		int col = dungeon.playerCol;
+		int row = dungeon.playerRow;
+		while (dungeon.valueSafe(row + 1, col) == 0) {
+			row++;
+		}
+		Terrain terrain = dungeonGO.GetComponentInChildren<Terrain> ();
+		float[,] backDoor = new float[1, 3];
+		backDoor [0, 0] = 1;
+		backDoor [0, 1] = 1;
+		backDoor [0, 2] = 1;
+		terrain.terrainData.SetHeights(col - 1, row + 1, backDoor);
+		float[,] leftDoor = new float[1, 1];
+		backDoor [0, 0] = 1;
+		terrain.terrainData.SetHeights(col - 1, row, leftDoor);
+		terrain.terrainData.SetHeights(col + 1, row, leftDoor);
+
+		Vector3 position = new Vector3(dungeon.columnToWorld(col), 0, dungeon.rowToWorld(row));
+		GameObject door = Object.Instantiate (config.entranceDoor, position, Quaternion.identity) as GameObject;
+		door.transform.parent = dungeonGO.transform;
+	}
+
 	private int floodFill(int[,] heights, int row, int col, int target, int replacement, bool[,] accesibles) {
 		if (row < 0 || col < 0 || row >= heights.GetLength(0) || col >= heights.GetLength(1)) {
 			return 0;

@@ -18,7 +18,7 @@ public class Monster1 : MonoBehaviour {
 		// FIXME: no existe un distanceSq?? (Chequeo mas eficiente)
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		float computedViewDistance = distance * (player.isTorchHigh() ? 1 : 0.5f);
-		if (distance > viewDistance) {
+		if (computedViewDistance > viewDistance) {
 			return;
 		}
 		if (distance < 2) {

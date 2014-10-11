@@ -27,6 +27,13 @@ public class Dungeon {
 		return heights.GetLength (1);
 	}
 
+	public int valueSafe(int row, int col) {
+		if (validPosition(row, col)) {
+			return heights [row, col];
+		}
+		return -1;
+	}
+
 	public int value(int row, int col) {
 		return heights [row, col];
 	}
@@ -50,6 +57,10 @@ public class Dungeon {
 			}
 		}
 		return count;
+	}
+
+	public Vector3 worldPosition(int row, int col, float y) {
+		return new Vector3(columnToWorld(col), 0, rowToWorld(row));
 	}
 
 	public float rowToWorld(int row) {
