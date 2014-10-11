@@ -57,7 +57,7 @@ public class BuildDungeon {
 		GameObject ceil = GameObject.CreatePrimitive(PrimitiveType.Plane) as GameObject;
 		ceil.name = "ceil";
 		ceil.transform.parent = dungeon.transform;
-		float scale = config.heightmapResolution / 10f;
+		float scale = config.heightmapResolution / 5f;
 		float dx = config.heightmapResolution / 2f;
 		ceil.transform.localScale = new Vector3 (scale, 1, scale);
 		ceil.transform.localPosition = new Vector3(dx, config.height, dx);

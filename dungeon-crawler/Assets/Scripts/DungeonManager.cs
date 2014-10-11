@@ -8,13 +8,10 @@ public class DungeonManager : MonoBehaviour {
 	public Material ceilMaterial;
 
 	public BuildDungeonConfig buildConfig;
-	
-	public GameObject[] enemies;
-	public GameObject[] items;
 
 	void Start () {
 		Dungeon dungeon = new BuildDungeon(buildConfig, texture, ceilMaterial).Build(gameObject);
-		new PopulateDungeon(enemies).Populate(gameObject, dungeon);
+		new PopulateDungeon(buildConfig).Populate(gameObject, dungeon);
 		if (!dungeon.valid) {
 			Debug.Log ("Re hacer nivel");
 			return;

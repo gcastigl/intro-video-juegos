@@ -31,4 +31,13 @@ public struct BuildDungeonConfig {
 
 	// upper neighbour limit at which cells start dying.
 	// public int overpopLimit;		// 5
+
+	public int enemiesAmount;		// 10
+
+	public GameObject[] enemies;
+
+	public int treasuresAmount;			// 15
+
+	public GameObject[] treasures;
+
 }

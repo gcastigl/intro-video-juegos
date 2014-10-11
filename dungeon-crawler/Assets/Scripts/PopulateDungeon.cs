@@ -3,17 +3,18 @@ using System.Collections;
 
 public class PopulateDungeon {
 
-	private GameObject[] enemies;
+	private BuildDungeonConfig config;
 
-	public PopulateDungeon(GameObject[] enemies) {
-		this.enemies = enemies;
+	public PopulateDungeon(BuildDungeonConfig config) {
+		this.config = config;
 	}
 
 	public void Populate(GameObject dungeonGO, Dungeon dungeon) {
 		evaluateAndSetStartPosition(dungeon);
 		if (dungeon.valid) {
 			Debug.Log ("El nivel parece bueno");
-			placeEnemies(dungeon, 10);
+			placeTreasures(dungeonGO, dungeon);
+			placeEnemies(dungeonGO, dungeon);
 		} else {
 			Debug.Log ("El nivel no es muy accesible");
 		}
@@ -62,20 +63,43 @@ public class PopulateDungeon {
 		return sum;
 	}
 
-	private void placeEnemies(Dungeon dungeon, int amount) {
+	private void placeTreasures(GameObject dungeonGO, Dungeon dungeon) {
+		GameObject treasuresGO = new GameObject("treasures");
+		treasuresGO.transform.parent = dungeonGO.transform;
 		int i = 0;
 		int tries = 0;
-		while(i < amount && tries < 200) {
+		while(i < config.treasuresAmount && tries < 600) {
+			int row = (int) (Random.value * (dungeon.rowsCount() - 3) + 2);
+			int col = (int) (Random.value * (dungeon.columnCount() - 3) + 2);
+			if (dungeon.accesibles[row, col] && dungeon.countNeighborsMatching(row, col, 1) >= 5) {
+				GameObject treasure = config.treasures[(int) (Random.value * config.treasures.Length)];
+				float x = dungeon.columnToWorld(col);
+				float z = dungeon.rowToWorld(row);
+				GameObject treasureGO = Object.Instantiate(treasure, new Vector3(x, 1, z), Quaternion.identity) as GameObject;
+				treasureGO.AddComponent<DestroyIfFreeFalling>();
+				treasureGO.transform.parent = treasuresGO.transform;
+				dungeon.accesibles[row, col] = false;
+				i++;
+			}
+			tries++;
+		}
+	}
+
+	private void placeEnemies(GameObject dungeonGO, Dungeon dungeon) {
+		GameObject enemiesGO = new GameObject("enemies");
+		enemiesGO.transform.parent = dungeonGO.transform;
+		int i = 0;
+		int tries = 0;
+		while(i < config.enemiesAmount && tries < 300) {
 			int row = (int) (Random.value * (dungeon.rowsCount() - 3) + 2);
 			int col = (int) (Random.value * (dungeon.columnCount() - 3) + 2);
 			if (dungeon.accesibles[row, col] && dungeon.countNeighborsMatching(row, col, 0) == 8) {
-				GameObject enemy = enemies[(int) (Random.value * enemies.Length)];
+				GameObject enemy = config.enemies[(int) (Random.value * config.enemies.Length)];
 				float x = dungeon.columnToWorld(col);
 				float z = dungeon.rowToWorld(row);
-				Object.Instantiate(enemy, new Vector3(x, 2f, z), Quaternion.identity);
+				GameObject enemyGO = Object.Instantiate(enemy, new Vector3(x, 2f, z), Quaternion.identity) as GameObject;
+				enemyGO.transform.parent = enemiesGO.transform;
 				i++;
-				// row / totalRows * width
-				Debug.Log ("Enemigo puesto: " + row + ", " + col);
 			}
 			tries++;
 		}
