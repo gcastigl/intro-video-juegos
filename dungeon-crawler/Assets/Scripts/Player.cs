@@ -15,6 +15,8 @@ public class Player : MonoBehaviour {
 	void Start () {
 		torchIsHight = true;
 		torcheLight = GetComponentInChildren<Torchelight>();
+		torcheLight.IntensityLight = highTorch.x;
+		torcheLight.MaxLightIntensity = highTorch.y;
 	}
 	
 	void Update () {
