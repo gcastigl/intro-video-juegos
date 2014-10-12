@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Dungeon {
 
@@ -8,11 +9,13 @@ public class Dungeon {
 	public bool[,] accesibles;
 	public int playerRow, playerCol;
 	public float worldWidth, worldLenght;
+	public IList<Treasure> treasures;
 
 	public Dungeon(int[,] heights) : this(heights, 0, 0) {
 	}
 
 	public Dungeon(int[,] heights, float worldWidth, float worldLenght) {
+		treasures = new List<Treasure>();
 		this.heights = heights;
 		this.accesibles = new bool[rowsCount (), columnCount ()];
 		this.worldWidth = worldWidth;

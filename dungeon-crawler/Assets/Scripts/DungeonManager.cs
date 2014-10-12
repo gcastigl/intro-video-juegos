@@ -5,6 +5,7 @@ public class DungeonManager : MonoBehaviour {
 
 	public GameObject player;
 	public GameObject entranceDoor;
+	public DrawDungeonOnMap drawDungeonOnMap;
 	public Material floorNaturalMaterial;
 	public Texture2D floorTexture;
 	public Texture2D floorTextureNormal;
@@ -23,10 +24,7 @@ public class DungeonManager : MonoBehaviour {
 		}
 		player.transform.position = new Vector3(dungeon.columnToWorld(dungeon.playerCol), 2, dungeon.rowToWorld(dungeon.playerRow));
 		player.SetActive (true);
+		drawDungeonOnMap.OnDungeonCreated(dungeon);
 	}
 
-
-	void Update () {
-	
-	}
 }

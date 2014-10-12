@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public GameObject map;
 	public GameObject torchPrefab;
 	public Vector2 highTorch = new Vector2(1.5f, 1.5f);
 	public Vector2 lowTorch = new Vector2(0.2f, 0.9f);
@@ -35,6 +36,9 @@ public class Player : MonoBehaviour {
 				torcheLight.MaxLightIntensity = highTorch.y;
 			}
 			torchIsHight = !torchIsHight;
+		}
+		if (Input.GetKeyUp(KeyCode.Tab)) {
+			map.SetActive(!map.activeSelf);
 		}
 	}
 

@@ -115,6 +115,7 @@ public class PopulateDungeon {
 				treasureGO.transform.parent = treasuresGO.transform;
 				treasure.transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
 				dungeon.accesibles[row, col] = false;
+				dungeon.treasures.Add(new Treasure(new Vector2(row, col), false));
 				i++;
 			}
 			tries++;

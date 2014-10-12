@@ -137,7 +137,7 @@ public class BuildDungeon {
 		// Smooth out walls
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
 			for (int col = 0; col < dungeon.columnCount(); col++) {
-				heights[row, col] = sumNeighbors(row, col, dungeon) / 8f;
+				heights[row, col] = sumNeighbors(row, col, dungeon) / 9f;
 				if (dungeon.value(row, col) == 0) {
 					heights[row, col] = heights[row, col] / 2f;
 					// XXX: if floor, add some random bumps
