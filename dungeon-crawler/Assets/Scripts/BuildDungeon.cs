@@ -3,18 +3,22 @@ using System.Collections;
 
 public class BuildDungeon {
 	
-	private Texture2D texture;
+	private Material floorNaturalMaterial;
+	private Texture2D floorTexture;
+	private Texture2D floorTextureNormal;
 	private Material ceilMaterial;
 	private BuildDungeonConfig config;
 
-	public BuildDungeon(BuildDungeonConfig config, Texture2D texture, Material ceilMaterial) {
+	public BuildDungeon(BuildDungeonConfig config, Material floorNaturalMaterial, Texture2D floorTexture, Texture2D floorTextureNormal, Material ceilMaterial) {
 		this.config = config;
-		this.texture = texture;
+		this.floorNaturalMaterial = floorNaturalMaterial;
+		this.floorTexture = floorTexture;
+		this.floorTextureNormal = floorTextureNormal;
 		this.ceilMaterial = ceilMaterial;
 	}
 
 	public Dungeon Build(GameObject dungeonGO) {
-		GameObject terrainGo = createTerrainGO(dungeonGO, "floor");
+		GameObject terrainGo = createTerrainGO(dungeonGO);
 		Terrain terrain = terrainGo.GetComponent<Terrain>();
 		if (config.useSeed) {
 			Random.seed = config.seed;
@@ -33,10 +37,11 @@ public class BuildDungeon {
 		return dungeon;
 	}
 
-	private GameObject createTerrainGO(GameObject dungeon, string name) {
+	private GameObject createTerrainGO(GameObject dungeon) {
 		TerrainData data = new TerrainData ();
 		SplatPrototype splat = new SplatPrototype();
-		splat.texture = texture;
+		splat.texture = floorTexture;
+		splat.normalMap = floorTextureNormal;
 		splat.tileOffset = new Vector2(0, 0);
 		splat.tileSize = new Vector2(15, 15);
 		SplatPrototype[] splats = new SplatPrototype[1];
@@ -48,8 +53,10 @@ public class BuildDungeon {
 		data.SetDetailResolution(32, 8);
 		GameObject terrainGo = Terrain.CreateTerrainGameObject(data);
 		terrainGo.transform.parent = dungeon.transform;
-		terrainGo.name = name;
+		terrainGo.name = "floor";
 		terrainGo.isStatic = false;
+		Terrain terrain = terrainGo.GetComponent<Terrain>();
+		terrain.materialTemplate = floorNaturalMaterial;
 		return terrainGo;
 	}
 
@@ -124,10 +131,34 @@ public class BuildDungeon {
 		float[,] heights = new float[dungeon.rowsCount(), dungeon.columnCount()];
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
 			for (int col = 0; col < dungeon.columnCount(); col++) {
-				// TODO: possible add some little noise?
 				heights[row, col] = dungeon.heights[row, col];
 			}
 		}
+		// Smooth out walls
+		for (int row = 0; row < dungeon.rowsCount(); row++) {
+			for (int col = 0; col < dungeon.columnCount(); col++) {
+				heights[row, col] = sumNeighbors(row, col, dungeon) / 8f;
+				if (dungeon.value(row, col) == 0) {
+					heights[row, col] = heights[row, col] / 2f;
+					// XXX: if floor, add some random bumps
+					heights[row, col] += Mathf.Sign(Random.value - 0.5f) * Random.value / 10f;
+				}
+			}
+		}
 		return heights;
+	}
+
+	private float sumNeighbors(int row, int col, Dungeon dungeon) {
+		int sum = 0;
+		for (int rowi = row - 1; rowi <= row + 1; rowi++) {
+			for (int colj = col - 1; colj <= col + 1; colj++) {
+				if (!dungeon.validPosition(rowi, colj)) {
+					sum++;
+				} else {
+					sum += dungeon.value(rowi, colj);
+				}
+			}
+		}
+		return sum;
 	}
 }

@@ -4,9 +4,11 @@ using System.Collections;
 public class PopulateDungeon {
 
 	private BuildDungeonConfig config;
+	private GameObject entranceDoor;
 
-	public PopulateDungeon(BuildDungeonConfig config) {
+	public PopulateDungeon(BuildDungeonConfig config, GameObject entranceDoor) {
 		this.config = config;
+		this.entranceDoor = entranceDoor;
 	}
 
 	public void Populate(GameObject dungeonGO, Dungeon dungeon) {
@@ -24,6 +26,7 @@ public class PopulateDungeon {
 	private void evaluateAndSetStartPosition(Dungeon dungeon) {
 		dungeon.valid = false;
 		bool playerPosFound = false;
+		// TODO: esto podria hacerse mucho mas eficinete!!
 		int maxFlood = (dungeon.rowsCount() - 2) * (dungeon.columnCount() - 2);
 		for (int row = 0; row < dungeon.rowsCount() && !playerPosFound; row++) {
 			for (int col = 0; col < dungeon.columnCount() && !playerPosFound; col++) {
@@ -64,7 +67,7 @@ public class PopulateDungeon {
 		terrain.terrainData.SetHeights(col + 1, row, leftDoor);
 
 		Vector3 position = new Vector3(dungeon.columnToWorld(col), 0, dungeon.rowToWorld(row));
-		GameObject door = Object.Instantiate (config.entranceDoor, position, Quaternion.identity) as GameObject;
+		GameObject door = Object.Instantiate(entranceDoor, position, Quaternion.identity) as GameObject;
 		door.transform.parent = dungeonGO.transform;
 	}
 
@@ -132,6 +135,7 @@ public class PopulateDungeon {
 			    	&& dungeon.distanceSq(row, col, dungeon.playerRow, dungeon.playerCol) > minDistanceToPlayerSq
 			    	&& dungeon.countNeighborsMatching(row, col, 0) == 8) {
 				GameObject enemy = config.enemies[(int) (Random.value * config.enemies.Length)];
+				enemy.name = "enemy_" + i;
 				float x = dungeon.columnToWorld(col);
 				float z = dungeon.rowToWorld(row);
 				GameObject enemyGO = Object.Instantiate(enemy, new Vector3(x, 2f, z), Quaternion.identity) as GameObject;
