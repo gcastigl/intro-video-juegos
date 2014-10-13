@@ -14,14 +14,19 @@ public class DungeonManager : MonoBehaviour {
 	public BuildDungeonConfig buildConfig;
 
 	void Start () {
-		GameObject shapeGo = new GameObject("shape");
-		shapeGo.transform.parent = transform;
-		Dungeon dungeon = new BuildDungeon(buildConfig, floorNaturalMaterial, floorTexture, floorTextureNormal, ceilMaterial).Build(shapeGo);
-		new PopulateDungeon(buildConfig, entranceDoor).Populate(gameObject, dungeon);
-		if (!dungeon.valid) {
-			Debug.Log ("Re hacer nivel");
-			return;
-		}
+		Debug.Log (Random.seed);
+		Dungeon dungeon;
+		do {
+			GameObject shapeGo = new GameObject("shape");
+			shapeGo.transform.parent = transform;
+			dungeon = new BuildDungeon(buildConfig, floorNaturalMaterial, floorTexture, floorTextureNormal, ceilMaterial).Build(shapeGo);
+			new PopulateDungeon(buildConfig, entranceDoor).Populate(gameObject, dungeon);
+			if (!dungeon.valid) {
+				Debug.Log("Nivel generado invalido. Generando nuevamente");
+				buildConfig.seed++;
+				shapeGo.SetActive(false);
+			}
+		} while (!dungeon.valid);
 		player.transform.position = new Vector3(dungeon.columnToWorld(dungeon.playerCol), 2, dungeon.rowToWorld(dungeon.playerRow));
 		player.SetActive (true);
 		drawDungeonOnMap.OnDungeonCreated(dungeon);
