@@ -5,17 +5,23 @@ public class PlayerGUI : MonoBehaviour {
 
 	public Player player;
 
-	private GUIText text;
-
+	public GUIText torchesLeftText;
+	public GUIText torchTimeoutText;
+	
 	void Start () {
-		text = GetComponent<GUIText>();
+
 	}
 
 	void Update () {
 		if (player.torchesLeft == 0) {
-			text.color = Color.red;
-			text.fontStyle = FontStyle.Bold;
+			torchesLeftText.color = Color.red;
+			torchesLeftText.fontStyle = FontStyle.Bold;
 		}
-		text.text = "Torches: " + player.torchesLeft;
+		torchesLeftText.text = "Torches: " + player.torchesLeft;
+		TorcheLightTimeout torchTimeout = player.getLightTimeout();
+		int totalSeconds = (torchTimeout == null) ? 0 : (int) torchTimeout.timeout;
+		int minutesLeft = totalSeconds / 60;
+		int secondsLeft = totalSeconds - minutesLeft * 60;
+		torchTimeoutText.text = minutesLeft + " : " + (secondsLeft < 10 ? "0" : "") + secondsLeft;
 	}
 }
