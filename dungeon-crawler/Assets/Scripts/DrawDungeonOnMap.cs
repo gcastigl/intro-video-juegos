@@ -16,7 +16,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 	}
 
 	public void OnDungeonCreated(Dungeon dungeon) {
-		mapTexture = new Texture2D (dungeon.rowsCount(), dungeon.columnCount());
+		mapTexture = new Texture2D (dungeon.columnCount(), dungeon.rowsCount());
 		Color transparent = new Color (0, 0, 0, 0);
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
 			for (int col = 0; col < dungeon.columnCount(); col++) {
@@ -24,7 +24,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 				if (dungeon.accesibles[row, col] && dungeon.value(row, col) == 0) {
 					color = floorColor;
 				}
-				mapTexture.SetPixel(row, col, color);
+				mapTexture.SetPixel(col, row, color);
 			}
 		}
 		drawPlayerPosition (dungeon);
@@ -49,7 +49,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 				float nRow = position.x + row;
 				float nCol = position.y + col;
 				if (Vector2.Distance(position, new Vector2(nRow, nCol)) <= 1) {
-					mapTexture.SetPixel((int) nRow, (int) nCol, color);
+					mapTexture.SetPixel((int) nCol, (int) nRow, color);
 				}
 			}
 		}
