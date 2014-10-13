@@ -8,6 +8,8 @@ public class Monster1 : MonoBehaviour {
 	public float turnSpeed = 1;
 	public float viewDistance = 15;
 
+	public Animation animation;
+
 	private Player player;
 
 	// XXX: CharacterMotor is defined in JS, ignore compile error...
@@ -32,6 +34,7 @@ public class Monster1 : MonoBehaviour {
 			if (Random.value < 0.3f) {
 				float angle = Random.value * 15 - 7.5f;
 				transform.Rotate(new Vector3(0, angle, 0));
+				playHitAnimation();
 			}
 			return;
 		}
@@ -50,6 +53,7 @@ public class Monster1 : MonoBehaviour {
 		float str = Mathf.Min (turnSpeed * Time.deltaTime, 1); 
 		transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, str);
 		if (distance < 2) {
+			playHitAnimation();
 			return;
 		}
 		if (Mathf.Abs(str) < 0.04f) {
@@ -57,4 +61,9 @@ public class Monster1 : MonoBehaviour {
 		}
 	}
 
+	private void playHitAnimation() {
+		if (!animation.isPlaying) {
+			animation.Play();
+		}
+	}
 }
