@@ -50,34 +50,36 @@ public class PopulateDungeon {
 	}
 
 	private void placeEntranceDoor(GameObject dungeonGO, Dungeon dungeon) {
-		int col = dungeon.playerCol;
-		int row = dungeon.playerRow;
-		while (dungeon.valueSafe(row - 1, col) == 0) {
-			row--;
-		}
+		int col;
+		int row;
+		bool placeFound;
+		Vector2 playerPos = new Vector2 (dungeon.playerRow, dungeon.playerCol);
+		int tryes = 0;
+		do { 
+			row = (int) (Random.Range(1, dungeon.rowsCount() - 1));
+			col = (int) (Random.Range(1, dungeon.columnCount() - 1));
+			placeFound = dungeon.accesibles[row + 1, col] 
+				&& dungeon.value(row + 1, col) == 0 
+				&& dungeon.value(row - 1, col) == 1
+				&& Vector2.Distance(new Vector2(row, col), playerPos) > config.heightmapResolution
+			;
+			// Debug.Log (row + " " +   col);
+			tryes++;
+		} while (!placeFound && tryes < 2000);
+		Debug.Log (placeFound);
 		Terrain terrain = dungeonGO.GetComponentInChildren<Terrain> ();
-
-		float[,] wallHeight = new float[1, 3];
-		wallHeight [0, 0] = 1;
-		wallHeight [0, 1] = 1;
-		wallHeight [0, 2] = 1;
-		terrain.terrainData.SetHeights(col - 1, row - 1, wallHeight);
-	
+		float[,] wallHeight = new float[1, 1];
+		wallHeight[0, 0] = 0.8f;
 		float[,] floorHeight = new float[1, 1];
 		floorHeight [0, 0] = 0;
-		// Front of the door
-		terrain.terrainData.SetHeights(col + 2, row + 1, floorHeight);
-		terrain.terrainData.SetHeights(col + 1, row + 1, floorHeight);
-		terrain.terrainData.SetHeights(col, row + 1, floorHeight);
-		terrain.terrainData.SetHeights(col - 1, row + 1, floorHeight);
-		terrain.terrainData.SetHeights(col - 2, row + 1, floorHeight);
-		// Sides
-		terrain.terrainData.SetHeights(col + 2, row, floorHeight);
-		terrain.terrainData.SetHeights(col + 1, row, floorHeight);
-		terrain.terrainData.SetHeights(col - 1, row, floorHeight);
-		terrain.terrainData.SetHeights(col - 2, row, floorHeight);
-		// Under
-		terrain.terrainData.SetHeights(col, row, floorHeight);
+		for (int i = -2; i <= 2; i++) {
+			// floor in front and sides
+			// terrain.terrainData.SetHeights(col + i, row - 3, wallHeight);
+			terrain.terrainData.SetHeights(col + i, row - 1, floorHeight);
+			terrain.terrainData.SetHeights(col + i, row, floorHeight);
+			terrain.terrainData.SetHeights(col + i, row + 1, floorHeight);
+			terrain.terrainData.SetHeights(col + i, row + 2, floorHeight);
+		}
 		Vector3 position = new Vector3(dungeon.columnToWorld(col), 0, dungeon.rowToWorld(row));
 		GameObject door = Object.Instantiate(entranceDoor, position, Quaternion.identity) as GameObject;
 		door.transform.parent = dungeonGO.transform;
