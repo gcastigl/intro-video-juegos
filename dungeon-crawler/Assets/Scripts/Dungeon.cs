@@ -8,6 +8,7 @@ public class Dungeon {
 	public int[,] heights;
 	public bool[,] accesibles;
 	public int playerRow, playerCol;
+	public int doorRow, doorCol;
 	public float worldWidth, worldLenght;
 	public IList<Treasure> treasures;
 
@@ -62,6 +63,7 @@ public class Dungeon {
 		return count;
 	}
 
+
 	public Vector3 worldPosition(int row, int col, float y) {
 		return new Vector3(columnToWorld(col), 0, rowToWorld(row));
 	}
@@ -73,7 +75,7 @@ public class Dungeon {
 	public float columnToWorld(int col) {
 		return col *  worldLenght / (float) columnCount();
 	}
-
+	/*
 	public float distanceSq(int row1, int col1, int row2, int col2) {
 		float row1World = rowToWorld (row1);
 		float col1World = columnToWorld (col1);
@@ -82,5 +84,12 @@ public class Dungeon {
 		float dx = row1World - row2World;
 		float dy = col1World - col2World;
 		return dx * dx + dy * dy;
+	}
+	*/
+
+	public float distanceSq(int row1, int col1, int row2, int col2) {
+		float dx = col1 - col2;
+		float dz = row1 - row2;
+		return dx *dx + dz * dz;
 	}
 }

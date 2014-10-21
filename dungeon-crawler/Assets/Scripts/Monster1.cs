@@ -28,7 +28,7 @@ public class Monster1 : MonoBehaviour {
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
-		if (distance < viewDistance && player.isTorchHigh ()) {
+		if (distance < viewDistance && player.isTorchHigh()) {
 			Vector3 direction = player.transform.position - transform.position;
 			Ray ray = new Ray (transform.position, direction.normalized);
 			RaycastHit hitInfo = new RaycastHit ();
@@ -38,7 +38,7 @@ public class Monster1 : MonoBehaviour {
 				Quaternion lookAt = Quaternion.LookRotation(direction);
 				float str = Mathf.Min (turnSpeed * Time.deltaTime, 1); 
 				transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, str);
-				motor.inputMoveDirection = transform.forward * 0.25f;
+				motor.inputMoveDirection = transform.forward * 0.4f;
 			}
 		} else {
 			motor.inputMoveDirection = transform.forward * 0.1f;

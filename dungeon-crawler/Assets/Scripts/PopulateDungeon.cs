@@ -54,36 +54,25 @@ public class PopulateDungeon {
 		int row;
 		bool placeFound;
 		Vector2 playerPos = new Vector2 (dungeon.playerRow, dungeon.playerCol);
-		int tryes = 0;
+		int tries = 0;
 		do { 
-			row = (int) (Random.Range(1, dungeon.rowsCount() - 1));
-			col = (int) (Random.Range(1, dungeon.columnCount() - 1));
-			placeFound = dungeon.accesibles[row + 1, col] 
-				&& dungeon.value(row + 1, col) == 0 
-				&& dungeon.value(row - 1, col) == 1
+			row = (int) (Random.Range(2, dungeon.rowsCount() - 2));
+			col = (int) (Random.Range(2, dungeon.columnCount() - 2));
+			placeFound = 
+				dungeon.accesibles[row + 1, col - 1]  && dungeon.accesibles[row + 1, col] && dungeon.accesibles[row + 1, col + 1]
+				&& !dungeon.accesibles[row, col]
+				&& !dungeon.accesibles[row - 2, col]
 				&& Vector2.Distance(new Vector2(row, col), playerPos) > config.heightmapResolution
 			;
-			// Debug.Log (row + " " +   col);
-			tryes++;
-		} while (!placeFound && tryes < 2000);
-		Debug.Log (placeFound);
-		Terrain terrain = dungeonGO.GetComponentInChildren<Terrain> ();
-		float[,] wallHeight = new float[1, 1];
-		wallHeight[0, 0] = 0.8f;
-		float[,] floorHeight = new float[1, 1];
-		floorHeight [0, 0] = 0;
-		for (int i = -2; i <= 2; i++) {
-			// floor in front and sides
-			// terrain.terrainData.SetHeights(col + i, row - 3, wallHeight);
-			terrain.terrainData.SetHeights(col + i, row - 1, floorHeight);
-			terrain.terrainData.SetHeights(col + i, row, floorHeight);
-			terrain.terrainData.SetHeights(col + i, row + 1, floorHeight);
-			terrain.terrainData.SetHeights(col + i, row + 2, floorHeight);
-		}
-		Vector3 position = new Vector3(dungeon.columnToWorld(col), 0, dungeon.rowToWorld(row));
+			tries++;
+		} while (!placeFound && tries < 2000);
+		Debug.Log (row + ", " + col);
+		dungeon.doorRow = row;
+		dungeon.doorCol = col;
+		Vector3 position = new Vector3(col, 1.5f, row);
 		GameObject door = Object.Instantiate(entranceDoor, position, Quaternion.identity) as GameObject;
 		door.transform.parent = dungeonGO.transform;
-		door.transform.localRotation = Quaternion.Euler (0, 180, 0);
+		door.transform.localRotation = Quaternion.Euler (0, 0, 0);
 	}
 
 	private int floodFill(int[,] heights, int row, int col, int target, int replacement, bool[,] accesibles) {
@@ -123,9 +112,9 @@ public class PopulateDungeon {
 			    	&& countNeighborsNUnitsApart(dungeon, row, col, 3, 1) >= 15) {	// XXX: Pero muchas paredes cerca...
 				GameObject treasure = config.treasures[(int) (Random.value * config.treasures.Length)];
 				treasure.name = "treasure_" + i;
-				float x = dungeon.columnToWorld(col);
-				float z = dungeon.rowToWorld(row);
-				GameObject treasureGO = Object.Instantiate(treasure, new Vector3(x, 1, z), Quaternion.identity) as GameObject;
+				float x = col;
+				float z = row;
+				GameObject treasureGO = Object.Instantiate(treasure, new Vector3(x, 8, z), Quaternion.identity) as GameObject;
 				treasureGO.AddComponent<DestroyIfFreeFalling>();
 				treasureGO.transform.parent = treasuresGO.transform;
 				treasure.transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
@@ -142,7 +131,7 @@ public class PopulateDungeon {
 		enemiesGO.transform.parent = dungeonGO.transform;
 		int i = 0;
 		int tries = 0;
-		float minDistanceToPlayerSq = 15 * 15;
+		float minDistanceToPlayerSq = 20 * 20;
 		float maxTries = 300;
 		while(i < config.enemiesAmount && tries < maxTries) {
 			int row = (int) (Random.value * (dungeon.rowsCount() - 3) + 2);
@@ -152,9 +141,9 @@ public class PopulateDungeon {
 			    	&& dungeon.countNeighborsMatching(row, col, 0) == 8) {
 				GameObject enemy = config.enemies[(int) (Random.value * config.enemies.Length)];
 				enemy.name = "enemy_" + i;
-				float x = dungeon.columnToWorld(col);
-				float z = dungeon.rowToWorld(row);
-				GameObject enemyGO = Object.Instantiate(enemy, new Vector3(x, 2f, z), Quaternion.identity) as GameObject;
+				float x = col;
+				float z = row;
+				GameObject enemyGO = Object.Instantiate(enemy, new Vector3(x, 8, z), Quaternion.identity) as GameObject;
 				enemyGO.transform.parent = enemiesGO.transform;
 				i++;
 			}

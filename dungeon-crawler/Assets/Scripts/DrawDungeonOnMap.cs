@@ -27,13 +27,13 @@ public class DrawDungeonOnMap : MonoBehaviour {
 				mapTexture.SetPixel(col, row, color);
 			}
 		}
-		drawPlayerPosition (dungeon);
-		drawTreasures (dungeon);
+		drawEntranceDoor(dungeon);
+		drawTreasures(dungeon);
 		mapTexture.Apply();
 	}
 
-	private void drawPlayerPosition(Dungeon dungeon) {
-		drawDot (new Vector2(dungeon.playerRow, dungeon.playerCol), playerColor);
+	private void drawEntranceDoor(Dungeon dungeon) {
+		drawDot (new Vector2(dungeon.doorRow, dungeon.doorCol), playerColor);
 	}
 
 	private void drawTreasures(Dungeon dungeon) {
