@@ -39,5 +39,6 @@ public struct BuildDungeonConfig {
 	public int treasuresAmount;			// 15
 
 	public GameObject[] treasures;
-	
+
+	public GameObject[] decorations;
 }

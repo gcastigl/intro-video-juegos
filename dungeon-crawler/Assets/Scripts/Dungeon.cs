@@ -7,6 +7,7 @@ public class Dungeon {
 	public bool valid;
 	public int[,] heights;
 	public bool[,] accesibles;
+	public float[,] heightsWithNoise;
 	public int playerRow, playerCol;
 	public int doorRow, doorCol;
 	public float worldWidth, worldLenght;
@@ -75,18 +76,7 @@ public class Dungeon {
 	private float columnToWorld(int col) {
 		return col *  worldLenght / (float) columnCount();
 	}
-	/*
-	public float distanceSq(int row1, int col1, int row2, int col2) {
-		float row1World = rowToWorld (row1);
-		float col1World = columnToWorld (col1);
-		float row2World = rowToWorld (row2);
-		float col2World = columnToWorld (col2);
-		float dx = row1World - row2World;
-		float dy = col1World - col2World;
-		return dx * dx + dy * dy;
-	}
-	*/
-
+	
 	public float distanceSq(int row1, int col1, int row2, int col2) {
 		float dx = col1 - col2;
 		float dz = row1 - row2;

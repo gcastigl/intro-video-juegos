@@ -11,14 +11,11 @@ public class RandomRotation : MonoBehaviour {
 	public float yFrequency = 1;
 	public float yAmplitude = 1;
 	public float yOffset = 1;
-	public bool randomizeIndex = true;
 	private float index;
 
 	void Start () {
-		if (randomizeIndex) {
-			index = Random.Range (-10, 10);
-		}
-		Vector3 dir = new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)).normalized;
+		index = Random.Range (-10, 10);
+		Vector3 dir = new Vector3(Random.Range(0, 1), 0, Random.Range(1, 1)).normalized;
 		Vector3 dist = dir * maxDistance;
 		transform.localPosition = transform.localPosition + dist;
 		Debug.Log (transform.localPosition);

@@ -27,6 +27,7 @@ public class DungeonManager : MonoBehaviour {
 				shapeGo.SetActive(false);
 			}
 		} while (!dungeon.valid);
+		new DungeonDecorator (buildConfig).Decorate(gameObject, dungeon);
 		GameObject player = Object.Instantiate(playerPrefab) as GameObject;
 		player.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
 		player.SetActive (true);

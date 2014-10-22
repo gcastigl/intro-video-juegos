@@ -32,7 +32,9 @@ public class BuildDungeon {
 		}
 		removeLonnelyPeeks(dungeon);
 		surroundWithWalls(dungeon);
-		data.SetHeights(0, 0, toFloatArray(dungeon));
+		float[,] heightsWithNoise = toFloatArray (dungeon);
+		data.SetHeights(0, 0, heightsWithNoise);
+		dungeon.heightsWithNoise = heightsWithNoise;
 		buildCeil(dungeonGO, terrain);
 		return dungeon;
 	}
