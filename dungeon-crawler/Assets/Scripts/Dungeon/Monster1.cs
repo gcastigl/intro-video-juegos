@@ -4,14 +4,17 @@ using System.Collections;
 public class Monster1 : MonoBehaviour {
 
 	static string attack01Name = "attack01";
+	public float roarTimeout = 5;
 
 	public int playerLayerMask;
 	public float moveSpeed = 1;
 	public float turnSpeed = 1;
 	public float viewDistance = 15;
-
+	
 	private Animator animator;
 	private Player player;
+	private AudioSource roarSource;
+	private float lastRoarTimeout = 0;
 
 	// XXX: CharacterMotor is defined in JS, ignore compile error...
 	private CharacterMotor motor;
@@ -19,6 +22,7 @@ public class Monster1 : MonoBehaviour {
 	void Awake () {
 		motor = GetComponent<CharacterMotor> ();
 		animator = GetComponentInChildren<Animator> ();
+		roarSource = GetComponent<AudioSource> ();
 	}
 
 	void Update () {
@@ -27,6 +31,9 @@ public class Monster1 : MonoBehaviour {
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
 		float computedViewDistance = player.isTorchHigh () ? viewDistance : viewDistance / 2;
+		if (lastRoarTimeout > 0) {
+			lastRoarTimeout -= Time.deltaTime;
+		}
 		if (distance < computedViewDistance) {
 			Vector3 direction = player.transform.position - transform.position;
 			Ray ray = new Ray (transform.position, direction.normalized);
@@ -34,6 +41,10 @@ public class Monster1 : MonoBehaviour {
 			bool hit = Physics.Raycast(ray, out hitInfo, computedViewDistance);
 			if (hit && hitInfo.transform.gameObject.layer == playerLayerMask) {
 				playerIsVisible = true;
+				if (!roarSource.isPlaying && lastRoarTimeout <= 0) {
+					roarSource.Play();
+					lastRoarTimeout = Random.Range(roarTimeout, roarTimeout * 2);
+				}
 				Quaternion lookAt = Quaternion.LookRotation(direction);
 				float str = Mathf.Min (turnSpeed * Time.deltaTime, 1); 
 				transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, str);
