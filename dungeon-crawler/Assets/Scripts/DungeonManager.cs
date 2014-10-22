@@ -3,19 +3,19 @@ using System.IO;
 
 public class DungeonManager : MonoBehaviour {
 
-	public GameObject player;
+	public GameObject playerPrefab;
 	public GameObject entranceDoor;
-	public DrawDungeonOnMap drawDungeonOnMap;
 	public Material floorNaturalMaterial;
 	public Texture2D floorTexture;
 	public Texture2D floorTextureNormal;
 	public Material ceilMaterial;
 
+	private Dungeon dungeon;
+
 	public BuildDungeonConfig buildConfig;
 
 	void Start () {
 		Debug.Log (Random.seed);
-		Dungeon dungeon;
 		do {
 			GameObject shapeGo = new GameObject("shape");
 			shapeGo.transform.parent = transform;
@@ -27,9 +27,12 @@ public class DungeonManager : MonoBehaviour {
 				shapeGo.SetActive(false);
 			}
 		} while (!dungeon.valid);
+		GameObject player = Object.Instantiate(playerPrefab) as GameObject;
 		player.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
 		player.SetActive (true);
-		drawDungeonOnMap.OnDungeonCreated(dungeon);
 	}
 
+	public Dungeon getDungeon() {
+		return dungeon;
+	}
 }

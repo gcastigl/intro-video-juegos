@@ -3,23 +3,26 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public GameObject mapPrefab;
+
 	public GameObject torchPrefab;
 	public int torchTimeout = 60 * 5;
 	public float switchTorchDelay = 5;
 
 	public GameObject torch;
-	public GameObject map;
 
 	public int torchesLeft;
 	public Vector2 highTorch = new Vector2(1.5f, 1.5f);
 	public Vector2 lowTorch = new Vector2(0.2f, 0.9f);
 
+	private GameObject map;
 	private bool torchIsHight;	
 	private Torchelight torcheLight;
 	private TorcheLightTimeout torcheLightTimeout;
 	private float switchTorchDelayCounter;
 
 	void Start () {
+		map = Object.Instantiate (mapPrefab) as GameObject;
 		torcheLight = torch.GetComponent<Torchelight>();
 		litNewTorchlight();
 	}

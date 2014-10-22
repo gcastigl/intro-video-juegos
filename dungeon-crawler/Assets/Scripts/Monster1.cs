@@ -14,17 +14,13 @@ public class Monster1 : MonoBehaviour {
 	// XXX: CharacterMotor is defined in JS, ignore compile error...
 	private CharacterMotor motor;
 
-	void Start () {
-	}
-
 	void Awake () {
-		GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
-		player = playerGO.GetComponent<Player>();
 		motor = GetComponent<CharacterMotor> ();
 		animator = GetComponentInChildren<Animator> ();
 	}
 
 	void Update () {
+		loadPlayer();
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
@@ -45,5 +41,12 @@ public class Monster1 : MonoBehaviour {
 			transform.Rotate(new Vector3(0, Random.value * 5 - 2.5f, 0));
 		}
 		animator.SetBool ("playerVisible", playerIsVisible);
+	}
+
+	private void loadPlayer() {
+		if (player == null) {
+			GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+			player = playerGO.GetComponent<Player>();
+		}
 	}
 }

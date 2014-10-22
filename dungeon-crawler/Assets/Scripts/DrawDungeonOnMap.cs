@@ -13,9 +13,8 @@ public class DrawDungeonOnMap : MonoBehaviour {
 
 	void Start() {
 		leyendStyle.font = font;
-	}
-
-	public void OnDungeonCreated(Dungeon dungeon) {
+		DungeonManager dungeonManager = GameObject.FindGameObjectWithTag("DungeonManager").GetComponent<DungeonManager>();
+		Dungeon dungeon = dungeonManager.getDungeon();
 		mapTexture = new Texture2D (dungeon.columnCount(), dungeon.rowsCount());
 		Color transparent = new Color (0, 0, 0, 0);
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
@@ -33,7 +32,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 	}
 
 	private void drawEntranceDoor(Dungeon dungeon) {
-		drawDot (new Vector2(dungeon.doorRow, dungeon.doorCol), playerColor);
+		drawDot(new Vector2(dungeon.doorRow, dungeon.doorCol), playerColor);
 	}
 
 	private void drawTreasures(Dungeon dungeon) {
@@ -65,7 +64,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 		float leyendWidth = Screen.width * 0.2f;
 		leyendStyle.normal.textColor = playerColor;
 		leyendStyle.fontSize = (int) (maxLen / 10f);
-		GUI.Label(new Rect(leyendXOffset, yOffset, leyendWidth, Screen.height * 0.1f), "Entrance Door", leyendStyle);
+		GUI.Label(new Rect(leyendXOffset, yOffset, leyendWidth, Screen.height * 0.1f), "Exit", leyendStyle);
 		leyendStyle.normal.textColor = treasureColor;
 		yOffset += Screen.height * 0.1f;
 		GUI.Label(new Rect(leyendXOffset, yOffset, leyendWidth, Screen.height * 0.1f), "Treasures", leyendStyle);
