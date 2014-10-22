@@ -8,7 +8,7 @@ public class Monster1 : MonoBehaviour {
 
 	public int playerLayerMask;
 	public float moveSpeed = 1;
-	public float turnSpeed = 1;
+	public float turnSpeed = 1.5f;
 	public float viewDistance = 15;
 	
 	private Animator animator;
@@ -27,6 +27,14 @@ public class Monster1 : MonoBehaviour {
 
 	void Update () {
 		loadPlayer();
+		if (player.alive) {
+			chaseAndAttack();
+		} else {
+			animator.SetBool ("playerVisible", false);
+		}
+	}
+
+	private void chaseAndAttack() {
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
@@ -47,14 +55,13 @@ public class Monster1 : MonoBehaviour {
 				}
 				Quaternion lookAt = Quaternion.LookRotation(direction);
 				float str = Mathf.Min (turnSpeed * Time.deltaTime, 1); 
+				float angleDiff = Quaternion.Angle(transform.rotation, lookAt);
 				transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, str);
-				motor.inputMoveDirection = transform.forward * 0.4f;
+				motor.inputMoveDirection = transform.forward * moveSpeed * (angleDiff < 10 ? 1 : 0);
 				bool hittingAnimation = animator.GetCurrentAnimatorStateInfo(0).IsName(attack01Name);
-				if (hittingAnimation && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f) {
+				if (hittingAnimation && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.7f) {
 					player.kill();
 					animator.SetBool("reloadHit", true);
-					GameObject deathOverlay = GameObject.FindGameObjectWithTag("DeathOverlay");
-					deathOverlay.GetComponent<GUITexture>().enabled = true;
 				} else {
 					animator.SetBool("reloadHit", false);
 				}
