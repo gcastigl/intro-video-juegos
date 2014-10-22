@@ -4,7 +4,9 @@ using System.Collections;
 public class AddToInventory : MonoBehaviour {
 
 	void OnTriggerEnter(Collider otherObj){
-		audio.Play();
+		if (audio != null) {
+			audio.Play();
+		}
 		this.gameObject.renderer.enabled = false;
 	}
 }
