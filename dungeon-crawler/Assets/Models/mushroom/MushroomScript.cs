@@ -17,7 +17,6 @@ public class MushroomScript : MonoBehaviour {
 		loadPlayer ();
 		if (Vector3.Distance (player.transform.position, transform.position) < distanceToTurnOff) {
 			if (light.intensity > 0) {
-				Debug.Log ("apagando");
 				light.intensity -= Time.deltaTime * 2;
 			}
 		} else {
