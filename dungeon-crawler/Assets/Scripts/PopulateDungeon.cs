@@ -58,21 +58,16 @@ public class PopulateDungeon {
 		do { 
 			row = (int) (Random.Range(2, dungeon.rowsCount() - 2));
 			col = (int) (Random.Range(2, dungeon.columnCount() - 2));
-			placeFound = 
-				dungeon.accesibles[row + 1, col - 1]  && dungeon.accesibles[row + 1, col] && dungeon.accesibles[row + 1, col + 1]
-				&& !dungeon.accesibles[row, col]
-				&& !dungeon.accesibles[row - 2, col]
-				&& Vector2.Distance(new Vector2(row, col), playerPos) > config.heightmapResolution
-			;
+			placeFound = dungeon.accesibles[row, col] 
+				&& dungeon.countNeighborsMatching(row, col, 0) == 8
+				&& Vector2.Distance(new Vector2(row, col), playerPos) > config.heightmapResolution * 0.8f;
 			tries++;
-		} while (!placeFound && tries < 2000);
-		Debug.Log (row + ", " + col);
+		} while (!placeFound);
 		dungeon.doorRow = row;
 		dungeon.doorCol = col;
-		Vector3 position = new Vector3(col, 1.5f, row);
+		Vector3 position = dungeon.worldPosition(row, col, 0);
 		GameObject door = Object.Instantiate(entranceDoor, position, Quaternion.identity) as GameObject;
 		door.transform.parent = dungeonGO.transform;
-		door.transform.localRotation = Quaternion.Euler (0, 0, 0);
 	}
 
 	private int floodFill(int[,] heights, int row, int col, int target, int replacement, bool[,] accesibles) {
@@ -112,9 +107,7 @@ public class PopulateDungeon {
 			    	&& countNeighborsNUnitsApart(dungeon, row, col, 3, 1) >= 15) {	// XXX: Pero muchas paredes cerca...
 				GameObject treasure = config.treasures[(int) (Random.value * config.treasures.Length)];
 				treasure.name = "treasure_" + i;
-				float x = col;
-				float z = row;
-				GameObject treasureGO = Object.Instantiate(treasure, new Vector3(x, 8, z), Quaternion.identity) as GameObject;
+				GameObject treasureGO = Object.Instantiate(treasure, dungeon.worldPosition(row, col, 8), Quaternion.identity) as GameObject;
 				treasureGO.AddComponent<DestroyIfFreeFalling>();
 				treasureGO.transform.parent = treasuresGO.transform;
 				treasure.transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
@@ -131,7 +124,7 @@ public class PopulateDungeon {
 		enemiesGO.transform.parent = dungeonGO.transform;
 		int i = 0;
 		int tries = 0;
-		float minDistanceToPlayerSq = 20 * 20;
+		float minDistanceToPlayerSq = 25 * 25;
 		float maxTries = 300;
 		while(i < config.enemiesAmount && tries < maxTries) {
 			int row = (int) (Random.value * (dungeon.rowsCount() - 3) + 2);
@@ -141,9 +134,7 @@ public class PopulateDungeon {
 			    	&& dungeon.countNeighborsMatching(row, col, 0) == 8) {
 				GameObject enemy = config.enemies[(int) (Random.value * config.enemies.Length)];
 				enemy.name = "enemy_" + i;
-				float x = col;
-				float z = row;
-				GameObject enemyGO = Object.Instantiate(enemy, new Vector3(x, 8, z), Quaternion.identity) as GameObject;
+				GameObject enemyGO = Object.Instantiate(enemy, dungeon.worldPosition(row, col, 8), Quaternion.identity) as GameObject;
 				enemyGO.transform.parent = enemiesGO.transform;
 				i++;
 			}

@@ -27,8 +27,7 @@ public class DungeonManager : MonoBehaviour {
 				shapeGo.SetActive(false);
 			}
 		} while (!dungeon.valid);
-		// Debug.Log (dungeon.playerRow + ", " + dungeon.playerCol);
-		player.transform.position = new Vector3(dungeon.playerRow, buildConfig.height, dungeon.playerCol);
+		player.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
 		player.SetActive (true);
 		drawDungeonOnMap.OnDungeonCreated(dungeon);
 	}

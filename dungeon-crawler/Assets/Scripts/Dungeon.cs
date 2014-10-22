@@ -65,14 +65,14 @@ public class Dungeon {
 
 
 	public Vector3 worldPosition(int row, int col, float y) {
-		return new Vector3(columnToWorld(col), 0, rowToWorld(row));
+		return new Vector3(columnToWorld(col), y, rowToWorld(row));
 	}
 
-	public float rowToWorld(int row) {
+	private float rowToWorld(int row) {
 		return row *  worldWidth / (float) rowsCount();
 	}
 
-	public float columnToWorld(int col) {
+	private float columnToWorld(int col) {
 		return col *  worldLenght / (float) columnCount();
 	}
 	/*
