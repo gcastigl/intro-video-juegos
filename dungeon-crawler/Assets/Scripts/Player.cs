@@ -37,6 +37,8 @@ public class Player : MonoBehaviour {
 			torchesLeft--;
 		}
 		if (Input.GetKeyUp(KeyCode.T)) {
+			TorcheLightTimeout torcheTimeout = torch.GetComponent<TorcheLightTimeout>();
+			torcheTimeout.on = !torchIsHight;
 			if (torchIsHight) {
 				torcheLight.IntensityLight = lowTorch.x;
 				torcheLight.MaxLightIntensity = lowTorch.y;
