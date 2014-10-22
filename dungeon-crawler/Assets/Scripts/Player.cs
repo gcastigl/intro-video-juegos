@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	public int torchesLeft;
 	public Vector2 highTorch = new Vector2(1.5f, 1.5f);
 	public Vector2 lowTorch = new Vector2(0.2f, 0.9f);
-
+	
 	private GameObject map;
 	private bool torchIsHight;	
 	private Torchelight torcheLight;
@@ -76,4 +76,5 @@ public class Player : MonoBehaviour {
 	public TorcheLightTimeout getLightTimeout() {
 		return torcheLightTimeout;
 	}
+
 }

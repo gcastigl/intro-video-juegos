@@ -51,6 +51,7 @@ public class Monster1 : MonoBehaviour {
 				motor.inputMoveDirection = transform.forward * 0.4f;
 				bool hittingAnimation = animator.GetCurrentAnimatorStateInfo(0).IsName(attack01Name);
 				if (hittingAnimation && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f) {
+					player.GetComponents<AudioSource>()[1].Play();
 					animator.SetBool("reloadHit", true);
 					Debug.Log("HIT!!!");
 				} else {
