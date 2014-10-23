@@ -8,23 +8,27 @@ public class Player : MonoBehaviour {
 	public GameObject torchPrefab;
 	public int torchTimeout = 60 * 5;
 	public float switchTorchDelay = 5;
-
-	public GameObject torch;
-
-	public int torchesLeft;
 	public Vector2 highTorch = new Vector2(1.5f, 1.5f);
-	public Vector2 lowTorch = new Vector2(0.2f, 0.9f);
-	
+	public GameObject torch;
+	public GameObject camera;
+
 	private GameObject map;
 	private bool torchIsHight;	
 	private Torchelight torcheLight;
 	private TorcheLightTimeout torcheLightTimeout;
+
+	private bool alive;
+	public int torchesLeft;
+	private AudioSource deathAudioSource;
+
 	private float switchTorchDelayCounter;
 
 	void Start () {
+		alive = true;
 		map = Object.Instantiate (mapPrefab) as GameObject;
 		torcheLight = torch.GetComponent<Torchelight>();
 		litNewTorchlight();
+		deathAudioSource = GetComponents<AudioSource>()[1];
 	}
 
 	void Update () {
@@ -40,8 +44,8 @@ public class Player : MonoBehaviour {
 			TorcheLightTimeout torcheTimeout = torch.GetComponent<TorcheLightTimeout>();
 			torcheTimeout.on = !torchIsHight;
 			if (torchIsHight) {
-				torcheLight.IntensityLight = lowTorch.x;
-				torcheLight.MaxLightIntensity = lowTorch.y;
+				torcheLight.IntensityLight = 0;
+				torcheLight.MaxLightIntensity = 0;
 			} else {
 				torcheLight.IntensityLight = highTorch.x;
 				torcheLight.MaxLightIntensity = highTorch.y;
@@ -76,5 +80,17 @@ public class Player : MonoBehaviour {
 	public TorcheLightTimeout getLightTimeout() {
 		return torcheLightTimeout;
 	}
-
+	public void kill() {
+		if (alive) {
+			alive = false;
+			deathAudioSource.Play();
+			GameObject deathOverlay = GameObject.FindGameObjectWithTag("DeathOverlay");
+			GUITexture texture = deathOverlay.GetComponent<GUITexture>();
+			texture.enabled = true;
+			enabled = false;
+			GetComponent<MouseLook>().enabled = false;
+			GetComponent<CharacterMotor>().enabled = false;
+			camera.GetComponent<MouseLook>().enabled = false;
+		}
+	}
 }
