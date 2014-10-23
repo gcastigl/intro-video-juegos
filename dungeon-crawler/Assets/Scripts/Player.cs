@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
 	private Torchelight torcheLight;
 	private TorcheLightTimeout torcheLightTimeout;
 
-	private bool alive;
+	public bool alive;
 	public int torchesLeft;
 	private AudioSource deathAudioSource;
 
