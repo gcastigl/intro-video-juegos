@@ -8,7 +8,7 @@ public class MainMenuScript : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKeyUp(KeyCode.Space)) {
+		if (Input.GetKeyUp(KeyCode.Return)) {
 			Application.LoadLevel("Start");
 		}
 	}
