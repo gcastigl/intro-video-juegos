@@ -27,5 +27,18 @@ public class DungeonDecorator {
 				}
 			} while(!placed);
 		}
+		/*
+		 * TODO: descomentar esto para agregar un particleSystem al dungeon
+		GameObject particlesGO = new GameObject("particles");
+		particlesGO.transform.parent = decorations.transform;
+		particlesGO.transform.position = new Vector3(dungeon.worldWidth/ 2 , 2, dungeon.worldLenght / 2);
+		ParticleSystem particles = particlesGO.AddComponent<ParticleSystem>();
+		// particles.duration = 1;
+		Gradient gradient = new Gradient ();
+		// TODO: color del gradietne
+		particles.startColor = new Color(1, 1, 1);
+		particles.simulationSpace = ParticleSystemSimulationSpace.World;
+		*/
+
 	}
 }
