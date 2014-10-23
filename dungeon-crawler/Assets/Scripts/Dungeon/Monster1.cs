@@ -29,6 +29,8 @@ public class Monster1 : MonoBehaviour {
 		loadPlayer();
 		if (player.alive) {
 			chaseAndAttack();
+		} else {
+			animator.SetBool ("playerVisible", false);
 		}
 	}
 
