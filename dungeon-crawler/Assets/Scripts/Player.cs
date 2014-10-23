@@ -19,6 +19,7 @@ public class Player : MonoBehaviour {
 
 	public bool alive;
 	public int torchesLeft;
+	private AudioSource ambientAudioSource;
 	private AudioSource deathAudioSource;
 
 	private float switchTorchDelayCounter;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
 		map = Object.Instantiate (mapPrefab) as GameObject;
 		torcheLight = torch.GetComponent<Torchelight>();
 		litNewTorchlight();
+		ambientAudioSource = GetComponents<AudioSource>()[0];
 		deathAudioSource = GetComponents<AudioSource>()[1];
 	}
 
@@ -85,12 +87,17 @@ public class Player : MonoBehaviour {
 			alive = false;
 			deathAudioSource.Play();
 			GameObject deathOverlay = GameObject.FindGameObjectWithTag("DeathOverlay");
-			GUITexture texture = deathOverlay.GetComponent<GUITexture>();
-			texture.enabled = true;
-			enabled = false;
-			GetComponent<MouseLook>().enabled = false;
-			GetComponent<CharacterMotor>().enabled = false;
-			camera.GetComponent<MouseLook>().enabled = false;
+			deathOverlay.GetComponent<GUITexture>().enabled = true;
+			disableMovement();
 		}
+	}
+
+	public void disableMovement() {
+		enabled = false;
+		GetComponent<MouseLook>().enabled = false;
+		GetComponent<CharacterMotor>().enabled = false;
+		camera.GetComponent<MouseLook>().enabled = false;
+		ambientAudioSource.enabled = false;
+		GameObject.FindGameObjectWithTag("TorchInformation").SetActive(false);
 	}
 }
