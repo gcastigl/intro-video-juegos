@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerGUI : MonoBehaviour {
-	
+public class TorchStatusGUI : MonoBehaviour {
+
+	public DungeonManager dungeonManager;
 	public GUIText torchesLeftText;
 	public GUIText torchTimeoutText;
-
-	private Player player;
-
+	
 	void Update () {
-		loadPlayer ();
+		Player player = dungeonManager.getPlayer();
 		if (player.torchesLeft == 0) {
 			torchesLeftText.color = Color.red;
 			torchesLeftText.fontStyle = FontStyle.Bold;
@@ -20,11 +19,10 @@ public class PlayerGUI : MonoBehaviour {
 		int minutesLeft = totalSeconds / 60;
 		int secondsLeft = totalSeconds - minutesLeft * 60;
 		torchTimeoutText.text = minutesLeft + " : " + (secondsLeft < 10 ? "0" : "") + secondsLeft;
-	}
-
-	private void loadPlayer() {
-		if (player == null) {
-			player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		if (dungeonManager.dungeonStatus != DungeonManager.STATUS_UNSOLVED) {
+			torchesLeftText.gameObject.SetActive(false);
+			torchTimeoutText.gameObject.SetActive(false);
+			Destroy(this);
 		}
 	}
 }
