@@ -24,6 +24,7 @@ public class DungeonDecorator {
 					GameObject decoration = Object.Instantiate(prefab, dungeon.worldPosition(row, col, y), Quaternion.identity) as GameObject;
 					decoration.transform.parent = decorations.transform;
 					placed = true;
+					dungeon.decorations.Add(new Decoration(new Vector2(row, col)));
 				}
 			} while(!placed);
 		}

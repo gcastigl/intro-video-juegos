@@ -22,13 +22,13 @@ public class DungeonManager : MonoBehaviour {
 
 	void Start () {
 		Debug.Log (Random.seed);
+		if(PlayerPrefs.GetInt("dificulty") == 0){
+			buildConfig.enemiesAmount = 6;
+			buildConfig.treasuresAmount = 3;
+		}
 		do {
 			GameObject shapeGo = new GameObject("shape");
 			shapeGo.transform.parent = transform;
-			if(PlayerPrefs.GetInt("dificulty") == 0){
-				buildConfig.enemiesAmount = 10;
-				buildConfig.treasuresAmount = 1;
-			}
 			dungeon = new BuildDungeon(buildConfig, floorNaturalMaterial, floorTexture, floorTextureNormal, ceilMaterial).Build(shapeGo);
 			new PopulateDungeon(buildConfig, entranceDoor).Populate(gameObject, dungeon);
 			if (!dungeon.valid) {

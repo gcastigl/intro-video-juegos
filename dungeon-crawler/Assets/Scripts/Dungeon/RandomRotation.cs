@@ -19,7 +19,6 @@ public class RandomRotation : MonoBehaviour {
 		Vector3 dir = new Vector3(Random.Range(0, 1), 0, Random.Range(1, 1)).normalized;
 		Vector3 dist = dir * maxDistance;
 		transform.localPosition = transform.localPosition + dist;
-		Debug.Log (transform.localPosition);
 	}
 
 	void Update () {

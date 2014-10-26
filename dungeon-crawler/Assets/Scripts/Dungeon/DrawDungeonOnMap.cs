@@ -7,6 +7,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 	public Color floorColor = new Color(246, 214, 98, 117);
 	public Color playerColor = Color.red;
 	public Color treasureColor = Color.blue;
+	public Color decorationColor = Color.green;
 
 	private GUIStyle leyendStyle = new GUIStyle();
 	private Texture2D mapTexture;
@@ -28,6 +29,7 @@ public class DrawDungeonOnMap : MonoBehaviour {
 		}
 		drawEntranceDoor(dungeon);
 		drawTreasures(dungeon);
+		drawDecorations(dungeon);
 		mapTexture.Apply();
 	}
 
@@ -38,6 +40,12 @@ public class DrawDungeonOnMap : MonoBehaviour {
 	private void drawTreasures(Dungeon dungeon) {
 		foreach(Treasure treasure in dungeon.treasures) {
 			drawDot(treasure.position, treasureColor);
+		}
+	}
+
+	private void drawDecorations(Dungeon dungeon) {
+		foreach(Decoration decoration in dungeon.decorations) {
+			drawDot(decoration.position, decorationColor);
 		}
 	}
 
@@ -68,5 +76,8 @@ public class DrawDungeonOnMap : MonoBehaviour {
 		leyendStyle.normal.textColor = treasureColor;
 		yOffset += Screen.height * 0.1f;
 		GUI.Label(new Rect(leyendXOffset, yOffset, leyendWidth, Screen.height * 0.1f), "Treasures", leyendStyle);
+		leyendStyle.normal.textColor = decorationColor;
+		yOffset += Screen.height * 0.1f;
+		GUI.Label(new Rect(leyendXOffset, yOffset, leyendWidth, Screen.height * 0.1f), "References", leyendStyle);
 	}
 }
