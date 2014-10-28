@@ -76,6 +76,7 @@ public class Monster1 : MonoBehaviour {
 	private void loadPlayer() {
 		if (player == null) {
 			GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+			Debug.Log (playerGO);
 			player = playerGO.GetComponent<Player>();
 		}
 	}
