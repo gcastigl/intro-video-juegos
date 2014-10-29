@@ -33,7 +33,7 @@ function OnGUI(){
 	if (pauseEnabled) {
 		
 		//Make a background box
-		GUI.Box(Rect(Screen.width /2 - 100,Screen.height /2 - 100,250,200), "Pause Menu");
+		GUI.Box(Rect(Screen.width /2 - 100,Screen.height /2 - 150,250,200), "Pause Menu");
 		
 		//Make Main Menu button
 		if(GUI.Button(Rect(Screen.width /2 - 100,Screen.height /2 - 50,250,50), "Main Menu")) {
@@ -45,6 +45,9 @@ function OnGUI(){
 			} else{
 				showGraphicsDropDown = false;
 			}
+		}
+		if(GUI.Button(Rect(Screen.width /2 - 100,Screen.height /2-100,250,50), "Reload")) {
+			Application.LoadLevel(Application.loadedLevel);
 		}
 		//Create the Graphics settings buttons, these won't show automatically, they will be called when
 		//the user clicks on the "Change Graphics Quality" Button, and then dissapear when they click

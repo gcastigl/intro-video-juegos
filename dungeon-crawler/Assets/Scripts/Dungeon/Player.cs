@@ -11,10 +11,13 @@ public class Player : MonoBehaviour {
 	public Camera camera;
 	public FlashLight flashLight;
 
+	public Shader heatVisionShader;
+
 	void Start () {
 		alive = true;
 		dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
 		map = Object.Instantiate (mapPrefab) as GameObject;
+		camera.RenderWithShader(heatVisionShader, "VisibleWithHeatVision");
 	}
 
 	void Update () {
