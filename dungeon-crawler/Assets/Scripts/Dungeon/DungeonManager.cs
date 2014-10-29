@@ -39,7 +39,7 @@ public class DungeonManager : MonoBehaviour {
 		} while (!dungeon.valid);
 		new DungeonDecorator (buildConfig).Decorate(gameObject, dungeon);
 		playerGO = Object.Instantiate(playerPrefab) as GameObject;
-		playerGO.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
+		playerGO.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height / 2);
 		player = playerGO.GetComponent<Player> ();
 	}
 

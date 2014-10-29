@@ -26,24 +26,35 @@ public class PopulateDungeon {
 	private void evaluateAndSetStartPosition(Dungeon dungeon) {
 		dungeon.valid = false;
 		bool playerPosFound = false;
-		// TODO: esto podria hacerse mucho mas eficinete!!
+		bool[,] flooded = new bool[dungeon.rowsCount(), dungeon.columnCount()];
 		int maxFlood = (dungeon.rowsCount() - 2) * (dungeon.columnCount() - 2);
 		for (int row = 0; row < dungeon.rowsCount() && !playerPosFound; row++) {
 			for (int col = 0; col < dungeon.columnCount() && !playerPosFound; col++) {
-				if (dungeon.value(row, col) == 0 && dungeon.countNeighborsMatching(row, col, 0) == 8) {
+				if (dungeon.value(row, col) == 0 && !flooded[row, col] && dungeon.countNeighborsMatching(row, col, 0) == 8) {
 					int[,] heightsCopy = dungeon.heights.Clone() as int[,];
-					bool[,] accesibles = dungeon.accesibles.Clone() as bool[,];
-					int flood = floodFill(heightsCopy, row, col, 0, -1, accesibles);
+					bool[,] accesiblesFromPosition = dungeon.accesibles.Clone() as bool[,];
+					int flood = floodFill(heightsCopy, row, col, 0, -1, accesiblesFromPosition);
+					markAll(accesiblesFromPosition, flooded);
 					float p = flood / (float) maxFlood;
 					dungeon.valid = p > 0.4;
 					if (dungeon.valid) {
-						dungeon.accesibles = accesibles;
+						dungeon.accesibles = accesiblesFromPosition;
 						Debug.Log("P. accesible: " + p);
 						Debug.Log("Area accesible: " + (p * dungeon.rowsCount() * dungeon.columnCount()));
 						dungeon.playerRow = row;
 						dungeon.playerCol = col;
 						playerPosFound = true;
 					}
+				}
+			}
+		}
+	}
+
+	private void markAll(bool[,] accesiblesFromPosition, bool[,] flooded) {
+		for (int row = 0; row < accesiblesFromPosition.GetLength(0); row++) {
+			for (int col = 0; col < accesiblesFromPosition.GetLength(1); col++) {
+				if (accesiblesFromPosition[row, col]) {
+					flooded[row, col] = accesiblesFromPosition[row, col];
 				}
 			}
 		}

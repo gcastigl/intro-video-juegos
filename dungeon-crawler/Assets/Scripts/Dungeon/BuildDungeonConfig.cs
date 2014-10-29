@@ -41,4 +41,6 @@ public struct BuildDungeonConfig {
 	public GameObject[] treasures;
 
 	public GameObject[] decorations;
+
+	public GameObject[] rocks;
 }

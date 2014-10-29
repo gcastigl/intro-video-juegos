@@ -28,5 +28,19 @@ public class DungeonDecorator {
 				}
 			} while(!placed);
 		}
+		for (int i = 0; i < 15; i++) {
+			int index = Random.Range(0, _buildConfig.rocks.Length);
+			bool placed = false;
+			do {
+				int row = Random.Range(1, _buildConfig.heightmapResolution - 1);
+				int col = Random.Range(1, _buildConfig.heightmapResolution - 1);
+				if (dungeon.accesibles[row, col] && dungeon.countNeighborsMatching(row, col, 0) == 8) {
+					float y = 8;
+					GameObject rock = Object.Instantiate(_buildConfig.rocks[index], dungeon.worldPosition(row, col, y), Quaternion.identity) as GameObject;
+					rock.transform.parent = decorations.transform;
+					placed = true;
+				}
+			} while(!placed);
+		}
 	}
 }
