@@ -3,13 +3,13 @@ using System.Collections;
 
 public class MonsterDisappear : MonoBehaviour {
 
-	private Animator animator;
+	public Animator animator;
 
-	void start(){
-		animator.SetBool ("inHouse", true);
+	void Start() {
+		animator.SetBool("inDaHouse", true);
 	}
 
-	void OnTriggerEnter(Collider otherObj){
+	void OnTriggerEnter(Collider otherObj) {
 		this.gameObject.SetActive (false);
 	}
 }
