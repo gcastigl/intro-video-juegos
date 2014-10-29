@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 	private GameObject map;
 	public bool alive;
 	public Camera camera;
+	public FlashLight flashLight;
 
 	void Start () {
 		alive = true;
@@ -19,6 +20,9 @@ public class Player : MonoBehaviour {
 	void Update () {
 		if (Input.GetKeyUp(KeyCode.Tab)) {
 			map.SetActive(!map.activeSelf);
+		}
+		if (flashLight.timeLeft < 0) {
+			dungeonManager.dungeonStatus = DungeonManager.STATUS_LOST;
 		}
 	}
 
