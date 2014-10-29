@@ -40,7 +40,7 @@ public class Monster1 : MonoBehaviour {
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
-		float computedViewDistance = player.isTorchHigh () ? viewDistance : viewDistance / 2;
+		float computedViewDistance = viewDistance / 2;
 		if (lastRoarTimeout > 0) {
 			lastRoarTimeout -= Time.deltaTime;
 		}

@@ -13,8 +13,6 @@ public class ChestOpen : MonoBehaviour {
 
 	void Update() {
 		if (opening && !chestAnimation.isPlaying) {
-			Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-			player.torchesLeft += 2;
 			Destroy(contents);
 			Destroy(this);
 		}
