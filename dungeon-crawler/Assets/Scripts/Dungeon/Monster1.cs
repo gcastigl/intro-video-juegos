@@ -59,9 +59,9 @@ public class Monster1 : MonoBehaviour {
 				float str = Mathf.Min (turnSpeed * Time.deltaTime, 1); 
 				float angleDiff = Quaternion.Angle(transform.rotation, lookAt);
 				transform.rotation = Quaternion.Lerp(transform.rotation, lookAt, str);
-				motor.inputMoveDirection = transform.forward * moveSpeed * (angleDiff < 10 ? 1 : 0);
+				motor.inputMoveDirection = transform.forward * moveSpeed * (angleDiff < 15 ? 1 : 0);
 				bool hittingAnimation = animator.GetCurrentAnimatorStateInfo(0).IsName(attack01Name);
-				if (hittingAnimation && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.7f) {
+				if (hittingAnimation && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f) {
 					player.kill();
 					animator.SetBool("reloadHit", true);
 				} else {
