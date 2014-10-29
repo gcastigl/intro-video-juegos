@@ -8,13 +8,12 @@ public class Player : MonoBehaviour {
 	private DungeonManager dungeonManager;
 	private GameObject map;
 	public bool alive;
-	private AudioSource deathAudioSource;
+	public Camera camera;
 
 	void Start () {
 		alive = true;
 		dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
 		map = Object.Instantiate (mapPrefab) as GameObject;
-		deathAudioSource = GetComponents<AudioSource>()[0];
 	}
 
 	void Update () {
@@ -25,9 +24,9 @@ public class Player : MonoBehaviour {
 
 	public void kill() {
 		if (alive) {
+			audio.Play();
 			alive = false;
 			dungeonManager.dungeonStatus = DungeonManager.STATUS_LOST;
-			deathAudioSource.Play();
 			disableMovement();
 		}
 	}
