@@ -139,11 +139,14 @@ public class BuildDungeon {
 		// Smooth out walls
 		for (int row = 0; row < dungeon.rowsCount(); row++) {
 			for (int col = 0; col < dungeon.columnCount(); col++) {
-				heights[row, col] = sumNeighbors(row, col, dungeon) / 9f;
-				if (dungeon.value(row, col) == 0) {
-					heights[row, col] = heights[row, col] / 2f;
-					// XXX: if floor, add some random bumps
-					heights[row, col] += Mathf.Sign(Random.value - 0.5f) * Random.value / 10f;
+				if (row == 0 || col == 0 || row == dungeon.rowsCount() - 1 || col == dungeon.columnCount() - 1) {
+					heights[row, col] = 1;
+				} else {
+					heights[row, col] = sumNeighbors(row, col, dungeon) / 9f;
+					if (dungeon.value(row, col) == 0) {
+						float r = Mathf.Sin(Random.Range(0f, 6.28f)) / 10;
+						heights[row, col] = (heights[row, col] / 2.5f) + r;
+					}
 				}
 			}
 		}
