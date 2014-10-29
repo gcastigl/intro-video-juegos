@@ -4,32 +4,26 @@ using System.Collections;
 public class MushroomScript : MonoBehaviour {
 
 	public float distanceToTurnOff = 5;
-	public Light light;
+	public Light glowLight;
 
-	private GameObject player;
+	private DungeonManager dungeonManager;
 	private float lightMaxIntensity;
 
 	void Start() {
-		lightMaxIntensity = light.intensity;
+		dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
+		lightMaxIntensity = glowLight.intensity;
 	}
 
 	void Update () {
-		loadPlayer ();
+		Player player = dungeonManager.getPlayer ();
 		if (Vector3.Distance (player.transform.position, transform.position) < distanceToTurnOff) {
-			if (light.intensity > 0) {
-				light.intensity -= Time.deltaTime * 2;
+			if (glowLight.intensity > 0) {
+				glowLight.intensity -= Time.deltaTime * 2;
 			}
 		} else {
-			if (light.intensity < lightMaxIntensity) {
-				light.intensity += Time.deltaTime;
+			if (glowLight.intensity < lightMaxIntensity) {
+				glowLight.intensity += Time.deltaTime;
 			}
-		}
-}
-
-
-	private void loadPlayer() {
-		if (player == null) {
-			player = GameObject.FindGameObjectWithTag("Player");
 		}
 	}
 }

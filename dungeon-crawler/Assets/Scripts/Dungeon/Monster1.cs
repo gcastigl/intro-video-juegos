@@ -10,9 +10,9 @@ public class Monster1 : MonoBehaviour {
 	public float moveSpeed = 1;
 	public float turnSpeed = 1.5f;
 	public float viewDistance = 15;
-	
+
+	private DungeonManager dungeonManager;
 	private Animator animator;
-	private Player player;
 	private AudioSource roarSource;
 	private float lastRoarTimeout = 0;
 
@@ -20,14 +20,15 @@ public class Monster1 : MonoBehaviour {
 	private CharacterMotor motor;
 
 	void Awake () {
+		dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
 		motor = GetComponent<CharacterMotor> ();
 		animator = GetComponentInChildren<Animator> ();
 		roarSource = GetComponent<AudioSource> ();
 	}
 
 	void Update () {
-		loadPlayer();
-		if (player.alive) {
+		Player player = dungeonManager.getPlayer();
+		if (player.alive && dungeonManager.dungeonStatus == DungeonManager.STATUS_UNSOLVED) {
 			chaseAndAttack();
 		} else {
 			animator.SetBool ("playerVisible", false);
@@ -35,6 +36,7 @@ public class Monster1 : MonoBehaviour {
 	}
 
 	private void chaseAndAttack() {
+		Player player = dungeonManager.getPlayer();
 		float distance = Vector3.Distance(player.transform.position, transform.position);
 		animator.SetFloat("playerDistance", distance);
 		bool playerIsVisible = false;
@@ -73,11 +75,4 @@ public class Monster1 : MonoBehaviour {
 		animator.SetBool ("playerVisible", playerIsVisible);
 	}
 
-	private void loadPlayer() {
-		if (player == null) {
-			GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
-			Debug.Log (playerGO);
-			player = playerGO.GetComponent<Player>();
-		}
-	}
 }

@@ -3,26 +3,32 @@ using System.IO;
 
 public class DungeonManager : MonoBehaviour {
 
+	public const int STATUS_LOST = -1;
+	public const int STATUS_UNSOLVED = 0;
+	public const int STATUS_BEATEN = 1;
+
 	public GameObject playerPrefab;
 	public GameObject entranceDoor;
 	public Material floorNaturalMaterial;
 	public Texture2D floorTexture;
 	public Texture2D floorTextureNormal;
 	public Material ceilMaterial;
-
-	private Dungeon dungeon;
-
 	public BuildDungeonConfig buildConfig;
+
+	public int dungeonStatus = STATUS_UNSOLVED;
+	private Dungeon dungeon;
+	private GameObject playerGO;
+	private Player player;
 
 	void Start () {
 		Debug.Log (Random.seed);
+		if(PlayerPrefs.GetInt("dificulty") == 0){
+			buildConfig.enemiesAmount = 6;
+			buildConfig.treasuresAmount = 3;
+		}
 		do {
 			GameObject shapeGo = new GameObject("shape");
 			shapeGo.transform.parent = transform;
-			if(PlayerPrefs.GetInt("dificulty") == 0){
-				buildConfig.enemiesAmount = 10;
-				buildConfig.treasuresAmount = 1;
-			}
 			dungeon = new BuildDungeon(buildConfig, floorNaturalMaterial, floorTexture, floorTextureNormal, ceilMaterial).Build(shapeGo);
 			new PopulateDungeon(buildConfig, entranceDoor).Populate(gameObject, dungeon);
 			if (!dungeon.valid) {
@@ -32,12 +38,20 @@ public class DungeonManager : MonoBehaviour {
 			}
 		} while (!dungeon.valid);
 		new DungeonDecorator (buildConfig).Decorate(gameObject, dungeon);
-		GameObject player = Object.Instantiate(playerPrefab) as GameObject;
-		player.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
-		player.SetActive (true);
+		playerGO = Object.Instantiate(playerPrefab) as GameObject;
+		playerGO.transform.position = dungeon.worldPosition(dungeon.playerRow, dungeon.playerCol, buildConfig.height);
+		player = playerGO.GetComponent<Player> ();
 	}
 
 	public Dungeon getDungeon() {
 		return dungeon;
+	}
+
+	public GameObject getPlayerGO() {
+		return playerGO;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 }

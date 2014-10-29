@@ -12,12 +12,14 @@ public class Dungeon {
 	public int doorRow, doorCol;
 	public float worldWidth, worldLenght;
 	public IList<Treasure> treasures;
+	public IList<Decoration> decorations;
 
 	public Dungeon(int[,] heights) : this(heights, 0, 0) {
 	}
 
 	public Dungeon(int[,] heights, float worldWidth, float worldLenght) {
 		treasures = new List<Treasure>();
+		decorations = new List<Decoration>();
 		this.heights = heights;
 		this.accesibles = new bool[rowsCount (), columnCount ()];
 		this.worldWidth = worldWidth;

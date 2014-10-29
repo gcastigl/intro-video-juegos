@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
 	public GameObject torch;
 	public GameObject camera;
 
+	private DungeonManager dungeonManager;
 	private GameObject map;
 	private bool torchIsHight;	
 	private Torchelight torcheLight;
@@ -21,11 +22,11 @@ public class Player : MonoBehaviour {
 	public int torchesLeft;
 	private AudioSource ambientAudioSource;
 	private AudioSource deathAudioSource;
-
 	private float switchTorchDelayCounter;
 
 	void Start () {
 		alive = true;
+		dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
 		map = Object.Instantiate (mapPrefab) as GameObject;
 		torcheLight = torch.GetComponent<Torchelight>();
 		litNewTorchlight();
@@ -85,9 +86,8 @@ public class Player : MonoBehaviour {
 	public void kill() {
 		if (alive) {
 			alive = false;
+			dungeonManager.dungeonStatus = DungeonManager.STATUS_LOST;
 			deathAudioSource.Play();
-			GameObject deathOverlay = GameObject.FindGameObjectWithTag("DeathOverlay");
-			deathOverlay.GetComponent<GUITexture>().enabled = true;
 			disableMovement();
 		}
 	}
@@ -98,6 +98,5 @@ public class Player : MonoBehaviour {
 		GetComponent<CharacterMotor>().enabled = false;
 		camera.GetComponent<MouseLook>().enabled = false;
 		ambientAudioSource.enabled = false;
-		GameObject.FindGameObjectWithTag("TorchInformation").SetActive(false);
 	}
 }
