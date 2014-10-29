@@ -22,6 +22,8 @@ public class ChestOpen : MonoBehaviour {
 		if (other.gameObject.layer == 9) {
 			Debug.Log ("Treasure chest opened!!");
 			chestAnimation.Play();
+			DungeonManager dungeonManager = GameObject.FindGameObjectWithTag ("DungeonManager").GetComponent<DungeonManager>();
+			dungeonManager.getPlayer().flashLight.timeLeft += 45;
 			opening = true;
 		}
 	}
